@@ -2,7 +2,7 @@ GeoProfs project
 Groep van 4 : Manuel, Stijn, Alec, Angelo
 
 Tijdens dit project gaan we een casus uitwerken over een tijd van 18 weken
-We gaan de volgende talen / frameworks gebruiken : Laravel, React, Tailwind.
+We gaan de volgende talen / frameworks gebruiken : Laravel, Vue.js, Tailwind.
 Voor het testen gebruiken we onder andere : Cypress, Swagger, Pest.
 
 De casus samengevat waar dit project op gebaseerd is:
