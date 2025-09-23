@@ -144,22 +144,11 @@
       <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/dflydev/dot-access-data" />
       <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/ramsey/collection" />
-      <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/wotz/laravel-swagger-ui" />
-      <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/psr/cache" />
-      <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/doctrine/annotations" />
-      <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/swagger-api/swagger-ui" />
-      <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/darkaonline/l5-swagger" />
-      <path value="$PROJECT_DIR$/BackendGeoprofs/vendor/zircote/swagger-php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
-  </component>
-  <component name="PhpUnit">
-    <phpunit_settings>
-      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/BackendGeoprofs/phpunit.xml" custom_loader_path="$PROJECT_DIR$/BackendGeoprofs/vendor/autoload.php" paratest_path="$PROJECT_DIR$/BackendGeoprofs/vendor/bin/paratest_for_phpstorm" use_configuration_file="true" />
-    </phpunit_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />
