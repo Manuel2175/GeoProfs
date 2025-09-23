@@ -6,6 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/BackendGeoprofs/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/BackendGeoprofs/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/BackendGeoprofs/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/BackendGeoprofs/tests/Feature" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/BackendGeoprofs/tests/Unit" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/brianium/paratest" />
       <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/carbonphp/carbon-doctrine-types" />
@@ -133,6 +135,12 @@
       <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/wotz/laravel-swagger-ui" />
+      <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/darkaonline/l5-swagger" />
+      <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/swagger-api/swagger-ui" />
+      <excludeFolder url="file://$MODULE_DIR$/BackendGeoprofs/vendor/zircote/swagger-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

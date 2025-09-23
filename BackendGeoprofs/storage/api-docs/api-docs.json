@@ -1,0 +1,48 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My API",
+        "description": "API documentation for my Laravel project",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/auth/request": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verkrijg de huidige ingelogde user",
+                "operationId": "bed316293511b21d73531c2926b9ce36",
+                "responses": {
+                    "401": {
+                        "description": "Geen ingelogde user"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Delete the authenticated session from the session storage",
+                "operationId": "9cc6452d04fb264f59efe7ded58d98de",
+                "responses": {
+                    "401": {
+                        "description": "Geen ingelogde user"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        }
+    ]
+}
