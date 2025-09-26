@@ -1,14 +1,14 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "My API",
-        "description": "API documentation for my Laravel project",
+        "title": "Geoprofs",
+        "description": "API documentatie voor geoprofs verlofsregistratiesysteem",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://localhost",
-            "description": "Local development server"
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Local api server"
         }
     ],
     "paths": {
@@ -17,11 +17,54 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Verkrijg de huidige ingelogde user",
+                "summary": "Get the currently logged-in user",
                 "operationId": "bed316293511b21d73531c2926b9ce36",
                 "responses": {
+                    "200": {
+                        "description": "Authenticated user returned"
+                    },
                     "401": {
-                        "description": "Geen ingelogde user"
+                        "description": "No logged-in user"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login with username and password",
+                "operationId": "25ae12e27b55dd95a5288e572e51f84e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "testuser"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logged-in user returned"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
                     }
                 }
             },
@@ -29,11 +72,14 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Delete the authenticated session from the session storage",
+                "summary": "Logout and invalidate session",
                 "operationId": "9cc6452d04fb264f59efe7ded58d98de",
                 "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    },
                     "401": {
-                        "description": "Geen ingelogde user"
+                        "description": "No logged-in user"
                     }
                 }
             }
