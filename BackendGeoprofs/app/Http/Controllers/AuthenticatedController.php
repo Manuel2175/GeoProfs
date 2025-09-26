@@ -54,7 +54,9 @@ class AuthenticatedController extends Controller
             return response()->json(Auth::user());
         }
 
-        return response()->json()->setStatusCode(401);
+        return response()->json([
+            'message' => 'Invalid username or password'
+        ], 401);
     }
 
     /**
