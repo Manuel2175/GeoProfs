@@ -1,13 +1,18 @@
 <script setup>
-import MyCalendar from "@/components/MyCalendar.vue";
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
+import { useRoute } from "vue-router"
+import Header from "@/components/Header.vue"
+import Footer from "@/components/Footer.vue"
+import VCalendar from "@/components/VCalendar.vue"
+
+const route = useRoute()
 </script>
 
 <template>
-  <Header/>
-  <MyCalendar/>
-  <Footer/>
-</template>
+  <Header />
 
-<style scoped></style>
+  <VCalendar v-if="route.path === '/'" />
+
+  <router-view />
+
+  <Footer />
+</template>

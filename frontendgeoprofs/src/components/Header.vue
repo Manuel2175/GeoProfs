@@ -1,5 +1,5 @@
 <script setup>
-import { User, LogIn, Calendar } from "lucide-vue-next";
+import {User, LogIn, Calendar} from "lucide-vue-next";
 </script>
 
 <template>
@@ -9,18 +9,29 @@ import { User, LogIn, Calendar } from "lucide-vue-next";
     </a>
 
     <nav class="flex items-center gap-6 text-sm font-[Inter]">
-      <a href="#" class="flex text-lg text-[#F3F4F6] items-center gap-2 hover:text-[#3FB950] transition-colors">
-        <LogIn class="w-4 h-4" /> Login
-      </a>
-      <a href="#" class="flex text-lg text-[#F3F4F6] items-center gap-2 hover:text-[#3FB950] transition-colors">
-        <User class="w-4 h-4" /> Profiel
-      </a>
-      <a
-        href="#"
+      <router-link
+        to="#"
+        class="flex text-lg text-[#F3F4F6] items-center gap-2 hover:text-[#3FB950] transition-colors"
+      >
+        <LogIn class="w-4 h-4"/>
+        Login
+      </router-link>
+
+      <router-link
+        to="#"
+        class="flex text-lg text-[#F3F4F6] items-center gap-2 hover:text-[#3FB950] transition-colors"
+      >
+        <User class="w-4 h-4"/>
+        Profiel
+      </router-link>
+      <router-link
+        to="/verlof"
         class="flex items-center text-lg gap-2 bg-[#3FB950] text-[#0E3A5B] px-3 py-1 rounded-lg font-semibold hover:bg-[#34a843] transition-colors"
       >
-        <Calendar class="w-4 h-4" /> Verlof aanvragen
-      </a>
+        <Calendar class="w-4 h-4"/>
+        Verlof aanvragen
+      </router-link>
+
     </nav>
   </header>
 </template>
