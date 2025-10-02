@@ -11,3 +11,10 @@ Route::prefix('auth')->group(function () {
     Route::get('/request', [AuthenticatedController::class, 'getAuthenticatedUser']);
     Route::delete('/request', [AuthenticatedController::class, 'destroy']);
 });
+
+Route::middleware([
+    'api',
+    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class
+])->get('/sanctum/csrf-cookie', function () {
+    return response()->noContent();
+});

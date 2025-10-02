@@ -50,9 +50,19 @@ class AuthenticatedController extends Controller
 
         $credentials = $request->only('name', 'password');
 
+//        if (Auth::attempt($credentials)) {
+//            return response()->json(Auth::user());
+//        }
         if (Auth::attempt($credentials)) {
-            return response()->json(Auth::user());
+            $user = Auth::user();
+            $token = $user->createToken('auth-token')->plainTextToken;
+
+            return response()->json([
+                'user' => $user,
+                'token' => $token
+            ]);
         }
+
 
         return response()->json([
             'message' => 'Invalid username or password'
