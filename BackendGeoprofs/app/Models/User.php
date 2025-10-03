@@ -46,4 +46,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function aanvragen()
+    {
+        return $this->hasMany(VerlofAanvraag::class);
+    }
 }

@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\VerlofAanvraagController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticatedController;
 
@@ -17,4 +19,7 @@ Route::middleware([
     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class
 ])->get('/sanctum/csrf-cookie', function () {
     return response()->noContent();
+});
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('user.verlofaanvraag', VerlofAanvraagController::class);
 });

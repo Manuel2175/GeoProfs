@@ -14,13 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-       //generate workers and admins
-       //User::factory(10)->create();
-
-    User::create([
-            'name' => 'name1',
-            'surname' => 'surname1',
-            'password' => Hash::make('password1'),
-        ]);
+        //generate workers and admins
+        User::factory(10)->create();
     }
 }
