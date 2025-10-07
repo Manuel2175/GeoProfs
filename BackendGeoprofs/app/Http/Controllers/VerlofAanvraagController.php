@@ -12,8 +12,12 @@ class VerlofAanvraagController extends Controller
     /**
      * @OA\Get(
      *     path="/user/verlofaanvraag",
-     *     summary="Get the currently logged-in user",
+     *     summary="Get the currently logged-in user verlofaanvraag",
      *     tags={"Verlofaanvraag"},
+     *          @OA\Response(
+     *          response=200,
+     *          description="Lijst aanvragen succesvol verzonden"
+     *      )
      * )
      */
     public function index(User $user)
@@ -22,7 +26,15 @@ class VerlofAanvraagController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/user/{userId}/verlof/aanvraag ",
+     *     summary="stores a new verlofaanvraag",
+     *     tags={"Verlofaanvraag"},
+     *          @OA\Response(
+     *          response=200,
+     *          description="Lijst aanvragen succesvol opgeslagen"
+     *      )
+     * )
      */
     public function store(Request $request, User $user)
     {
@@ -46,7 +58,15 @@ class VerlofAanvraagController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/user/{userid}/verlofaanvraag/{id} ",
+     *     summary="Get a specific users verofaanvragen",
+     *     tags={"Verlofaanvraag"},
+     *          @OA\Response(
+     *          response=200,
+     *          description="users verlofaanvragen"
+     *      )
+     * )
      */
     public function show(User $user, VerlofAanvraag $verlofAanvraag)
     {
@@ -54,7 +74,15 @@ class VerlofAanvraagController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put (
+     *     path="/user/{userid}/verlofaanvraag/{id}/approve",
+     *     summary="goedkeuring verlofaanvraag",
+     *     tags={"Verlofaanvraag"},
+     *          @OA\Response(
+     *          response=200,
+     *          description="users verlofaanvraag goedkeure"
+     *      )
+     * )
      */
     public function approve(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {
@@ -71,7 +99,15 @@ class VerlofAanvraagController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put (
+     *     path="/user/{userId}/verlofaanvraag/{id}}/reject",
+     *     summary="afwijzing verlofaanvraag",
+     *     tags={"Verlofaanvraag"},
+     *          @OA\Response(
+     *          response=200,
+     *          description="users verlofaanvraag afwijzen"
+     *      )
+     * )
      */
     public function reject(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {

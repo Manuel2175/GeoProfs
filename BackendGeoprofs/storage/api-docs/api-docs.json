@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/api",
+            "url": "http://127.0.0.1:8000//api",
             "description": "Local api server"
         }
     ],
@@ -83,12 +83,86 @@
                     }
                 }
             }
+        },
+        "/user/verlofaanvraag": {
+            "get": {
+                "tags": [
+                    "Verlofaanvraag"
+                ],
+                "summary": "Get the currently logged-in user verlofaanvraag",
+                "operationId": "7209a08d9268b0835dd7343c0e980f22",
+                "responses": {
+                    "200": {
+                        "description": "Lijst aanvragen succesvol verzonden"
+                    }
+                }
+            }
+        },
+        "/user/{userId}/verlof/aanvraag ": {
+            "post": {
+                "tags": [
+                    "Verlofaanvraag"
+                ],
+                "summary": "stores a new verlofaanvraag",
+                "operationId": "98248c11081a2cb82a081d61fb89f78b",
+                "responses": {
+                    "200": {
+                        "description": "Lijst aanvragen succesvol opgeslagen"
+                    }
+                }
+            }
+        },
+        "/user/{userid}/verlofaanvraag/{id} ": {
+            "get": {
+                "tags": [
+                    "Verlofaanvraag"
+                ],
+                "summary": "Get a specific users verofaanvragen",
+                "operationId": "6226d86849016a01e9be274c5ec77bf7",
+                "responses": {
+                    "200": {
+                        "description": "users verlofaanvragen"
+                    }
+                }
+            }
+        },
+        "/user/{userid}/verlofaanvraag/{id}/approve": {
+            "put": {
+                "tags": [
+                    "Verlofaanvraag"
+                ],
+                "summary": "goedkeuring verlofaanvraag",
+                "operationId": "4f0c659925f79261aee522aff2eee29b",
+                "responses": {
+                    "200": {
+                        "description": "users verlofaanvraag goedkeure"
+                    }
+                }
+            }
+        },
+        "/user/{userId}/verlofaanvraag/{id}}/reject": {
+            "put": {
+                "tags": [
+                    "Verlofaanvraag"
+                ],
+                "summary": "afwijzing verlofaanvraag",
+                "operationId": "a552a9f45d72a575fd2d8cf514d0ae53",
+                "responses": {
+                    "200": {
+                        "description": "users verlofaanvraag afwijzen"
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Verlofaanvraag",
+            "description": "Verlofaanvraag"
         }
     ]
 }
