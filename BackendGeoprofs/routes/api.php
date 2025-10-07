@@ -22,4 +22,6 @@ Route::middleware([
 });
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('user.verlofaanvraag', VerlofAanvraagController::class);
+    Route::put('/user/{userId}/verlofaanvraag/{id}}/reject', [VerlofAanvraagController::class, 'reject'])->name('user.verlofaanvraag.reject');
+    Route::put('/user/{userId}/verlofaanvraag/{id}}/approve', [VerlofAanvraagController::class, 'approve'])->name('user.verlofaanvraag.approve');
 });
