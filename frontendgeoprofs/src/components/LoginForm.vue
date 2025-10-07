@@ -65,16 +65,14 @@ export default {
       error.value = '';
 
       try {
-        // Call existing login functionality (AuthService)
         await AuthService.login(username.value, password.value);
 
-        // Redirect to home or dashboard after a successful login
         router.push('/dashboard');
       } catch (err) {
         console.error('Login error:', err);
         error.value =
           err.response?.data?.message || 'Er is een fout opgetreden. Probeer opnieuw.';
-        password.value = ''; // Reset password field
+        password.value = '';
       } finally {
         loading.value = false;
       }
@@ -91,6 +89,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Optional: Apply additional scoped styles here if needed */
-</style>
+<style scoped> </style>

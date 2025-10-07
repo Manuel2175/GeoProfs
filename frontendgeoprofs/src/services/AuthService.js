@@ -1,14 +1,11 @@
-// src/services/auth.service.js
 import axios from 'axios';
-
-// const API_URL = '/api/auth';
 
 class AuthService {
     async login(username, password) {
         try {
-            await axios.get('/sanctum/csrf-cookie'); // Uses axios.defaults.baseURL
+            await axios.get('/sanctum/csrf-cookie');
 
-            const response = await axios.post('/auth/request', { // No need for API_URL
+            const response = await axios.post('/auth/request', {
                 name: username,
                 password: password
             });
@@ -25,11 +22,11 @@ class AuthService {
     }
 
     logout() {
-        return axios.delete('/auth/request').then(() => { // Use DELETE method for logout
-            localStorage.removeItem('user'); // Clear user data from localStorage
-            delete axios.defaults.headers.common['Authorization']; // Remove Authorization header
+        return axios.delete('/auth/request').then(() => {
+            localStorage.removeItem('user');
+            delete axios.defaults.headers.common['Authorization'];
         }).catch((error) => {
-            console.error('Logout failed:', error); // Log logout errors
+            console.error('Logout failed:', error);
             throw error;
         });
     }

@@ -12,7 +12,6 @@ const updateCurrentUser = () => {
 };
 
 const handleLogin = () => {
-    // Redirect to the login page
     router.push('/login');
 };
 
@@ -20,7 +19,7 @@ const handleLogout = async () => {
     try {
         await AuthService.logout();
         updateCurrentUser();
-        router.push('/'); // Redirect to home after logout
+        router.push('/');
     } catch (error) {
         console.error('Logout error:', error);
     }
@@ -34,7 +33,6 @@ const handleLogout = async () => {
         </a>
 
         <nav class="flex items-center gap-6 text-sm font-[Inter]">
-            <!-- Show login button if user is not logged in -->
             <template v-if="!currentUser">
                 <button @click="handleLogin"
                     class="flex text-lg text-[#F3F4F6] items-center gap-2 hover:text-[#3FB950] transition-colors">
@@ -42,7 +40,6 @@ const handleLogout = async () => {
                 </button>
             </template>
 
-            <!-- Show these items only if user is logged in -->
             <template v-else>
                 <button @click="handleLogout"
                     class="flex text-lg text-[#F3F4F6] items-center gap-2 hover:text-[#3FB950] transition-colors">
