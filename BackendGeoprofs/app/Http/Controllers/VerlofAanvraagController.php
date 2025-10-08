@@ -5,19 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\VerlofAanvraag;
 use Illuminate\Http\Request;
-use function Pest\Laravel\json;
 
 class VerlofAanvraagController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/user/verlofaanvraag",
-     *     summary="Get the currently logged-in user verlofaanvraag",
+     *     path="/user/{userId}/verlofaanvraag",
+     *     summary="Get all verlofaanvragen of a specific user",
      *     tags={"Verlofaanvraag"},
-     *          @OA\Response(
-     *          response=200,
-     *          description="Lijst aanvragen succesvol verzonden"
-     *      )
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the user",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of verlofaanvragen retrieved successfully"
+     *     )
      * )
      */
     public function index(User $user)
@@ -27,13 +33,35 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/user/{userId}/verlof/aanvraag ",
-     *     summary="stores a new verlofaanvraag",
+     *     path="/user/{userId}/verlofaanvraag",
+     *     summary="Create a new verlofaanvraag for a user",
      *     tags={"Verlofaanvraag"},
-     *          @OA\Response(
-     *          response=200,
-     *          description="Lijst aanvragen succesvol opgeslagen"
-     *      )
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the user",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Verlofaanvraag details",
+     *         @OA\JsonContent(
+     *             required={"reden", "startdatum", "einddatum", "status"},
+     *             @OA\Property(property="reden", type="string", example="Vakantie"),
+     *             @OA\Property(property="startdatum", type="string", format="date", example="2025-07-01"),
+     *             @OA\Property(property="einddatum", type="string", format="date", example="2025-07-10"),
+     *             @OA\Property(property="status", type="string", example="In behandeling")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Verlofaanvraag successfully created"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
      * )
      */
     public function store(Request $request, User $user)
@@ -47,11 +75,11 @@ class VerlofAanvraagController extends Controller
         ]);
         //creation
         $aanvraag = VerlofAanvraag::create([
-           'reden' => $request->get('reden'),
-           'startdatum' => $request->get('startdatum'),
-           'einddatum' => $request->get('einddatum'),
-           'status' => $request->get('status'),
-           'userId' => $user->id,
+            'reden' => $request->get('reden'),
+            'startdatum' => $request->get('startdatum'),
+            'einddatum' => $request->get('einddatum'),
+            'status' => $request->get('status'),
+            'userId' => $user->id,
         ]);
         //return with succes
         return response()->json('Aanvraag:' . 'from:' . $user->name . $aanvraag->reden . 'is created!');
@@ -59,13 +87,31 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/user/{userid}/verlofaanvraag/{id} ",
-     *     summary="Get a specific users verofaanvragen",
+     *     path="/user/{userId}/verlofaanvraag/{id}",
+     *     summary="Get a specific verlofaanvraag of a user",
      *     tags={"Verlofaanvraag"},
-     *          @OA\Response(
-     *          response=200,
-     *          description="users verlofaanvragen"
-     *      )
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the user",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the verlofaanvraag",
+     *         @OA\Schema(type="integer", example=10)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Verlofaanvraag retrieved successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Verlofaanvraag not found"
+     *     )
      * )
      */
     public function show(User $user, VerlofAanvraag $verlofAanvraag)
@@ -74,14 +120,38 @@ class VerlofAanvraagController extends Controller
     }
 
     /**
-     * @OA\Put (
-     *     path="/user/{userid}/verlofaanvraag/{id}/approve",
-     *     summary="goedkeuring verlofaanvraag",
+     * @OA\Put(
+     *     path="/user/{userId}/verlofaanvraag/{id}/approve",
+     *     summary="Approve a verlofaanvraag (admin only)",
      *     tags={"Verlofaanvraag"},
-     *          @OA\Response(
-     *          response=200,
-     *          description="users verlofaanvraag goedkeure"
-     *      )
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=10)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Approval status update",
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="string", example="Goedgekeurd")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Verlofaanvraag approved successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden (not an admin)"
+     *     )
      * )
      */
     public function approve(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
@@ -99,14 +169,39 @@ class VerlofAanvraagController extends Controller
     }
 
     /**
-     * @OA\Put (
-     *     path="/user/{userId}/verlofaanvraag/{id}}/reject",
-     *     summary="afwijzing verlofaanvraag",
+     * @OA\Put(
+     *     path="/user/{userId}/verlofaanvraag/{id}/reject",
+     *     summary="Reject a verlofaanvraag (admin only)",
      *     tags={"Verlofaanvraag"},
-     *          @OA\Response(
-     *          response=200,
-     *          description="users verlofaanvraag afwijzen"
-     *      )
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=10)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Rejection reason and status update",
+     *         @OA\JsonContent(
+     *             required={"status", "afkeuringsreden"},
+     *             @OA\Property(property="status", type="string", example="Afgekeurd"),
+     *             @OA\Property(property="afkeuringsreden", type="string", example="Te weinig vakantiedagen")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Verlofaanvraag rejected successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden (not an admin)"
+     *     )
      * )
      */
     public function reject(Request $request, User $user, VerlofAanvraag $verlofAanvraag)

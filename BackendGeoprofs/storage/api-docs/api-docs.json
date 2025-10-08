@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000//api",
+            "url": "http://127.0.0.1:8000/api",
             "description": "Local api server"
         }
     ],
@@ -84,72 +84,250 @@
                 }
             }
         },
-        "/user/verlofaanvraag": {
+        "/user/{userId}/verlofaanvraag": {
             "get": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
-                "summary": "Get the currently logged-in user verlofaanvraag",
-                "operationId": "7209a08d9268b0835dd7343c0e980f22",
+                "summary": "Get all verlofaanvragen of a specific user",
+                "operationId": "6f05f5929cf2d0a4571b3cd902fda69b",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Lijst aanvragen succesvol verzonden"
+                        "description": "List of verlofaanvragen retrieved successfully"
                     }
                 }
-            }
-        },
-        "/user/{userId}/verlof/aanvraag ": {
+            },
             "post": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
-                "summary": "stores a new verlofaanvraag",
-                "operationId": "98248c11081a2cb82a081d61fb89f78b",
+                "summary": "Create a new verlofaanvraag for a user",
+                "operationId": "fe8a31fde554bd7aac25b216c5e39def",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Verlofaanvraag details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reden",
+                                    "startdatum",
+                                    "einddatum",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "reden": {
+                                        "type": "string",
+                                        "example": "Vakantie"
+                                    },
+                                    "startdatum": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-07-01"
+                                    },
+                                    "einddatum": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-07-10"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "In behandeling"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "200": {
-                        "description": "Lijst aanvragen succesvol opgeslagen"
+                    "201": {
+                        "description": "Verlofaanvraag successfully created"
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 }
             }
         },
-        "/user/{userid}/verlofaanvraag/{id} ": {
+        "/user/{userId}/verlofaanvraag/{id}": {
             "get": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
-                "summary": "Get a specific users verofaanvragen",
-                "operationId": "6226d86849016a01e9be274c5ec77bf7",
+                "summary": "Get a specific verlofaanvraag of a user",
+                "operationId": "175154480d8f3d8dfe15c2105e7befd3",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the verlofaanvraag",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "users verlofaanvragen"
+                        "description": "Verlofaanvraag retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Verlofaanvraag not found"
                     }
                 }
             }
         },
-        "/user/{userid}/verlofaanvraag/{id}/approve": {
+        "/user/{userId}/verlofaanvraag/{id}/approve": {
             "put": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
-                "summary": "goedkeuring verlofaanvraag",
-                "operationId": "4f0c659925f79261aee522aff2eee29b",
+                "summary": "Approve a verlofaanvraag (admin only)",
+                "operationId": "2aa3321cf1ebedec7cacc30102bd8c06",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Approval status update",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "Goedgekeurd"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "users verlofaanvraag goedkeure"
+                        "description": "Verlofaanvraag approved successfully"
+                    },
+                    "403": {
+                        "description": "Forbidden (not an admin)"
                     }
                 }
             }
         },
-        "/user/{userId}/verlofaanvraag/{id}}/reject": {
+        "/user/{userId}/verlofaanvraag/{id}/reject": {
             "put": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
-                "summary": "afwijzing verlofaanvraag",
-                "operationId": "a552a9f45d72a575fd2d8cf514d0ae53",
+                "summary": "Reject a verlofaanvraag (admin only)",
+                "operationId": "86566af1400887ed438c5cce28b68bfa",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Rejection reason and status update",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status",
+                                    "afkeuringsreden"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "Afgekeurd"
+                                    },
+                                    "afkeuringsreden": {
+                                        "type": "string",
+                                        "example": "Te weinig vakantiedagen"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "users verlofaanvraag afwijzen"
+                        "description": "Verlofaanvraag rejected successfully"
+                    },
+                    "403": {
+                        "description": "Forbidden (not an admin)"
                     }
                 }
             }

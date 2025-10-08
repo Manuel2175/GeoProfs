@@ -20,8 +20,10 @@ Route::middleware([
 ])->get('/sanctum/csrf-cookie', function () {
     return response()->noContent();
 });
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::apiResource('user.verlofaanvraag', VerlofAanvraagController::class);
-    Route::put('/user/{userId}/verlofaanvraag/{id}}/reject', [VerlofAanvraagController::class, 'reject'])->name('user.verlofaanvraag.reject');
-    Route::put('/user/{userId}/verlofaanvraag/{id}}/approve', [VerlofAanvraagController::class, 'approve'])->name('user.verlofaanvraag.approve');
+Route::middleware(['auth.api'])->group(function () {
+    Route::prefix('user/{userId}')->group(function () {
+        Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);
+        Route::put('verlofaanvraag/{id}/reject', [VerlofAanvraagController::class, 'reject'])->name('user.verlofaanvraag.reject');
+        Route::put('verlofaanvraag/{id}/approve', [VerlofAanvraagController::class, 'approve'])->name('user.verlofaanvraag.approve');
+    });
 });
