@@ -1,29 +1,22 @@
 <?php
-
 use App\Http\Controllers\VerlofAanvraagController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticatedController;
+use Illuminate\Support\Facades\Route;
 
-Route::get('/test', function () {
-    return response()->json(['ok' => true]);
-});
+Route::post('/auth/request', [AuthenticatedController::class, 'login']);
 
-Route::prefix('auth')->group(function () {
-    Route::post('/request', [AuthenticatedController::class, 'login']);
-    Route::get('/request', [AuthenticatedController::class, 'getAuthenticatedUser']);
-    Route::delete('/request', [AuthenticatedController::class, 'destroy']);
-});
+// Alleen toegankelijk met geldig Sanctum-token
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auth/request', [AuthenticatedController::class, 'getAuthenticatedUser']);
+    Route::delete('/auth/request', [AuthenticatedController::class, 'logout']);
 
-Route::middleware([
-    'api',
-    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class
-])->get('/sanctum/csrf-cookie', function () {
-    return response()->noContent();
-});
-Route::middleware(['auth.api'])->group(function () {
-    Route::prefix('user/{userId}')->group(function () {
+    // Verlofaanvraag routes
+    Route::prefix('user/{user}')->group(function () {
         Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);
-        Route::put('verlofaanvraag/{id}/reject', [VerlofAanvraagController::class, 'reject'])->name('user.verlofaanvraag.reject');
-        Route::put('verlofaanvraag/{id}/approve', [VerlofAanvraagController::class, 'approve'])->name('user.verlofaanvraag.approve');
+        Route::put('verlofaanvraag/{verlofaanvraag}/reject', [VerlofAanvraagController::class, 'reject'])
+            ->name('user.verlofaanvraag.reject');
+        Route::put('verlofaanvraag/{verlofaanvraag}/approve', [VerlofAanvraagController::class, 'approve'])
+            ->name('user.verlofaanvraag.approve');
     });
 });
+

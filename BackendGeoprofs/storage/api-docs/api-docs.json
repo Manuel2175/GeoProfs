@@ -17,22 +17,27 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Get the currently logged-in user",
+                "summary": "Get the currently authenticated user (requires Bearer token)",
                 "operationId": "bed316293511b21d73531c2926b9ce36",
                 "responses": {
                     "200": {
                         "description": "Authenticated user returned"
                     },
                     "401": {
-                        "description": "No logged-in user"
+                        "description": "Not authenticated"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Login with username and password",
+                "summary": "Login with username and password (returns Sanctum token)",
                 "operationId": "25ae12e27b55dd95a5288e572e51f84e",
                 "requestBody": {
                     "required": true,
@@ -61,7 +66,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Logged-in user returned"
+                        "description": "Login successful, returns user and token"
                     },
                     "401": {
                         "description": "Invalid credentials"
@@ -72,28 +77,33 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Logout and invalidate session",
-                "operationId": "9cc6452d04fb264f59efe7ded58d98de",
+                "summary": "Logout and revoke the current Sanctum token",
+                "operationId": "6eebb82ad8f2839db7b9be403d2c6cab",
                 "responses": {
                     "200": {
-                        "description": "Logged out successfully"
+                        "description": "Token revoked successfully"
                     },
                     "401": {
-                        "description": "No logged-in user"
+                        "description": "Not authenticated"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
-        "/user/{userId}/verlofaanvraag": {
+        "/user/{user}/verlofaanvraag": {
             "get": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Get all verlofaanvragen of a specific user",
-                "operationId": "6f05f5929cf2d0a4571b3cd902fda69b",
+                "operationId": "a0f7a9db451e2b85de597fe02faf6491",
                 "parameters": [
                     {
-                        "name": "userId",
+                        "name": "user",
                         "in": "path",
                         "description": "ID of the user",
                         "required": true,
@@ -107,17 +117,22 @@
                     "200": {
                         "description": "List of verlofaanvragen retrieved successfully"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Create a new verlofaanvraag for a user",
-                "operationId": "fe8a31fde554bd7aac25b216c5e39def",
+                "operationId": "58d31b7230ee49d9791609f6d8d0f1e4",
                 "parameters": [
                     {
-                        "name": "userId",
+                        "name": "user",
                         "in": "path",
                         "description": "ID of the user",
                         "required": true,
@@ -156,7 +171,7 @@
                                     },
                                     "status": {
                                         "type": "string",
-                                        "example": "In behandeling"
+                                        "example": "aangevraagd"
                                     }
                                 },
                                 "type": "object"
@@ -171,19 +186,24 @@
                     "422": {
                         "description": "Validation error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
-        "/user/{userId}/verlofaanvraag/{id}": {
+        "/user/{user}/verlofaanvraag/{verlofaanvraag}": {
             "get": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Get a specific verlofaanvraag of a user",
-                "operationId": "175154480d8f3d8dfe15c2105e7befd3",
+                "operationId": "24f2972b78de6a372a6e2017a8bd6c24",
                 "parameters": [
                     {
-                        "name": "userId",
+                        "name": "user",
                         "in": "path",
                         "description": "ID of the user",
                         "required": true,
@@ -193,7 +213,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "verlofaanvraag",
                         "in": "path",
                         "description": "ID of the verlofaanvraag",
                         "required": true,
@@ -210,19 +230,24 @@
                     "404": {
                         "description": "Verlofaanvraag not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
-        "/user/{userId}/verlofaanvraag/{id}/approve": {
+        "/user/{user}/verlofaanvraag/{verlofaanvraag}/approve": {
             "put": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Approve a verlofaanvraag (admin only)",
-                "operationId": "2aa3321cf1ebedec7cacc30102bd8c06",
+                "operationId": "3fcf8a1ab67e6daff412de65d65932fa",
                 "parameters": [
                     {
-                        "name": "userId",
+                        "name": "user",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -231,7 +256,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "verlofaanvraag",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -267,19 +292,24 @@
                     "403": {
                         "description": "Forbidden (not an admin)"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
-        "/user/{userId}/verlofaanvraag/{id}/reject": {
+        "/user/{user}/verlofaanvraag/{verlofaanvraag}/reject": {
             "put": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Reject a verlofaanvraag (admin only)",
-                "operationId": "86566af1400887ed438c5cce28b68bfa",
+                "operationId": "eb53ad0d053dd6ec4282b7a8937896c8",
                 "parameters": [
                     {
-                        "name": "userId",
+                        "name": "user",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -288,7 +318,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "verlofaanvraag",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -329,7 +359,21 @@
                     "403": {
                         "description": "Forbidden (not an admin)"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },

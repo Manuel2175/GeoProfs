@@ -12,12 +12,13 @@ class ApiAuthenticate
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
-    public function handle(Request $request, Closure $next, $guard = 'sanctum'): Response
+    public function handle(Request $request, Closure $next)
     {
-        if (!Auth::guard($guard)->check()) {
-            return response()->json(['message' => 'You need to be authorized to perform this action .'], 401);
+        $user = Auth::guard('sanctum')->user(); // returns user if token is valid
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
         return $next($request);
     }

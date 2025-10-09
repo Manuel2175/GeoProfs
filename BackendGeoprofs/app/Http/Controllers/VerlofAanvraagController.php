@@ -10,11 +10,12 @@ class VerlofAanvraagController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/user/{userId}/verlofaanvraag",
+     *     path="/user/{user}/verlofaanvraag",
      *     summary="Get all verlofaanvragen of a specific user",
+     *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="user",
      *         in="path",
      *         required=true,
      *         description="ID of the user",
@@ -33,11 +34,12 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/user/{userId}/verlofaanvraag",
+     *     path="/user/{user}/verlofaanvraag",
      *     summary="Create a new verlofaanvraag for a user",
+     *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="user",
      *         in="path",
      *         required=true,
      *         description="ID of the user",
@@ -51,7 +53,7 @@ class VerlofAanvraagController extends Controller
      *             @OA\Property(property="reden", type="string", example="Vakantie"),
      *             @OA\Property(property="startdatum", type="string", format="date", example="2025-07-01"),
      *             @OA\Property(property="einddatum", type="string", format="date", example="2025-07-10"),
-     *             @OA\Property(property="status", type="string", example="In behandeling")
+     *             @OA\Property(property="status", type="string", example="aangevraagd")
      *         )
      *     ),
      *     @OA\Response(
@@ -69,8 +71,8 @@ class VerlofAanvraagController extends Controller
         //validation
         $request->validate([
             'reden' => 'required',
-            'startdatum' => 'required:date',
-            'einddatum' => 'required',
+            'startdatum' => 'required|date',
+            'einddatum' => 'required|date',
             'status' => 'required',
         ]);
         //creation
@@ -79,26 +81,30 @@ class VerlofAanvraagController extends Controller
             'startdatum' => $request->get('startdatum'),
             'einddatum' => $request->get('einddatum'),
             'status' => $request->get('status'),
-            'userId' => $user->id,
+            'user_id' => $user->id,
         ]);
         //return with succes
-        return response()->json('Aanvraag:' . 'from:' . $user->name . $aanvraag->reden . 'is created!');
+        return response()->json([
+            'message' => 'Aanvraag created',
+            'aanvraag' => $aanvraag
+        ], 201);
     }
 
     /**
      * @OA\Get(
-     *     path="/user/{userId}/verlofaanvraag/{id}",
+     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}",
      *     summary="Get a specific verlofaanvraag of a user",
+     *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="user",
      *         in="path",
      *         required=true,
      *         description="ID of the user",
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Parameter(
-     *         name="id",
+     *         name="verlofaanvraag",
      *         in="path",
      *         required=true,
      *         description="ID of the verlofaanvraag",
@@ -121,17 +127,18 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/user/{userId}/verlofaanvraag/{id}/approve",
+     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}/approve",
      *     summary="Approve a verlofaanvraag (admin only)",
+     *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="user",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Parameter(
-     *         name="id",
+     *         name="verlofaanvraag",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer", example=10)
@@ -154,33 +161,34 @@ class VerlofAanvraagController extends Controller
      *     )
      * )
      */
-    public function approve(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
+    public function approve(Request $request, User $userId, VerlofAanvraag $verlofAanvraag)
     {
-        if ($user->role == 'admin') {
+        if ($userId->role == 'admin') {
             $request->validate([
                 'status' => 'required',
             ]);
             $verlofAanvraag->update([
                 'status' => $request->get('status'),
             ]);
-            return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is approved!');
+            return response()->json($verlofAanvraag->reden . 'from:' . $userId->name . ' is approved!');
         }
         return response()->json()->setStatusCode(403);
     }
 
     /**
      * @OA\Put(
-     *     path="/user/{userId}/verlofaanvraag/{id}/reject",
+     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}/reject",
      *     summary="Reject a verlofaanvraag (admin only)",
+     *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="user",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Parameter(
-     *         name="id",
+     *         name="verlofaanvraag",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer", example=10)
@@ -204,9 +212,9 @@ class VerlofAanvraagController extends Controller
      *     )
      * )
      */
-    public function reject(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
+    public function reject(Request $request, User $userId, VerlofAanvraag $verlofAanvraag)
     {
-        if ($user->role == 'admin') {
+        if ($userId->role == 'admin') {
             $request->validate([
                 'status' => 'required',
                 'afkeuringsreden' => 'required',
@@ -215,7 +223,7 @@ class VerlofAanvraagController extends Controller
                 'status' => $request->get('status'),
                 'afkeuringsreden' => $request->get('afkeuringsreden'),
             ]);
-            return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is rejected!');
+            return response()->json($verlofAanvraag->reden . 'from:' . $userId->name . ' is rejected!');
         }
         return response()->json()->setStatusCode(403);
     }
