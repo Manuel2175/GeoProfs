@@ -68,10 +68,10 @@ class VerlofAanvraagController extends Controller
     {
         //validation
         $request->validate([
-            'reden' => 'required',
-            'startdatum' => 'required:date',
-            'einddatum' => 'required',
-            'status' => 'required',
+            'reden' => 'required|string',
+            'startdatum' => 'required|date',
+            'einddatum' => 'required|date',
+            'status' => 'required|string',
         ]);
         //creation
         $aanvraag = VerlofAanvraag::create([
@@ -79,7 +79,7 @@ class VerlofAanvraagController extends Controller
             'startdatum' => $request->get('startdatum'),
             'einddatum' => $request->get('einddatum'),
             'status' => $request->get('status'),
-            'userId' => $user->id,
+            'user_id' => $user->id,
         ]);
         //return with succes
         return response()->json('Aanvraag:' . 'from:' . $user->name . $aanvraag->reden . 'is created!');

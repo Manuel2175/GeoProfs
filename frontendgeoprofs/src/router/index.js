@@ -18,6 +18,11 @@ const routes = [
     name: 'Dashboard',
     component: () => import('@/components/Dashboard.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/verlof',
+    name: 'Verlof',
+    component: () => import('@/components/VerlofForm.vue'),
   }
 ];
 

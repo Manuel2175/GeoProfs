@@ -21,7 +21,7 @@ Route::middleware([
     return response()->noContent();
 });
 Route::middleware(['auth.api'])->group(function () {
-    Route::prefix('user/{userId}')->group(function () {
+    Route::prefix('user/{user}')->group(function () {
         Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);
         Route::put('verlofaanvraag/{id}/reject', [VerlofAanvraagController::class, 'reject'])->name('user.verlofaanvraag.reject');
         Route::put('verlofaanvraag/{id}/approve', [VerlofAanvraagController::class, 'approve'])->name('user.verlofaanvraag.approve');

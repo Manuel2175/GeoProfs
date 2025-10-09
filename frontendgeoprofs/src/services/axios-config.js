@@ -40,3 +40,13 @@ axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export const ensureCsrfToken = async () => {
+  try {
+    // Override de baseURL om de root van het domein te raken voor Sanctum
+    await axios.get('/sanctum/csrf-cookie', { baseURL: import.meta.env.VITE_APP_URL || 'http://localhost:8000' });
+    console.log('CSRF cookie succesvol opgehaald door centrale functie.');
+  } catch (error) {
+    console.warn('Waarschuwing: Het ophalen van de CSRF cookie is mislukt.', error.message);
+  }
+};
