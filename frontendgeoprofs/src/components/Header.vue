@@ -51,7 +51,7 @@ const handleLogout = async () => {
                 <span class="flex text-lg text-[#F3F4F6] items-center gap-2">
                     <User class="w-4 h-4" /> {{ currentUser.user.name }}
                 </span>
-                <a href="#"
+                <a href="/verlof"
                     class="flex items-center text-lg gap-2 bg-[#3FB950] text-[#0E3A5B] px-3 py-1 rounded-lg font-semibold hover:bg-[#34a843] transition-colors">
                     <Calendar class="w-4 h-4" /> Verlof aanvragen
                 </a>
