@@ -4,9 +4,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
+uses( RefreshDatabase::class);
 it('logs in the user successfully', function () {
     Auth::shouldReceive('attempt')
         ->once()

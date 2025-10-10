@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/api",
+            "url": "http://laravel.test/api",
             "description": "Local api server"
         }
     ],
