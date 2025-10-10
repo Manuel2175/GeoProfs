@@ -3,7 +3,8 @@ import { useRouter } from 'vue-router';
 import VerlofService from "@/services/VerlofService.js";
 import AuthService from "@/services/AuthService.js";
 import { ref, onMounted } from 'vue';
-import {ensureCsrfToken} from "@/services/axios-config.js"; // onMounted toevoegen
+import {ensureCsrfToken} from "@/services/axios-config.js";
+import verlofService from "@/services/VerlofService.js"; // onMounted toevoegen
 
 export default {
   name: 'VerlofForm',
@@ -27,8 +28,8 @@ export default {
       try {
         const currentUser = AuthService.getCurrentUser();
 
-        const userId = currentUser.user.id;
-        await VerlofService.aanvragen(userId, {
+        const user = currentUser.id;
+        await VerlofService.aanvragen(user, {
           reden: reden.value,
           startdatum: startdatum.value,
           einddatum: einddatum.value,

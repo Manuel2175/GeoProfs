@@ -1,44 +1,54 @@
 // src/services/auth.service.js
 import axios from 'axios';
 
-// const API_URL = '/api/auth';
-
 class AuthService {
-    async login(username, password) {
-        try {
-            await axios.get('/sanctum/csrf-cookie'); // Uses axios.defaults.baseURL
+  async login(username, password) {
+    try {
+      const response = await axios.post('/auth/request', {
+        name: username,
+        password: password
+      });
 
-            const response = await axios.post('/auth/request', { // No need for API_URL
-                name: username,
-                password: password
-            });
+      // Verwacht dat de API een JWT of ander bearer token teruggeeft
+      if (response.data?.token) {
+        const userData = {
+          ...response.data.user,
+          token: response.data.token
+        };
 
-            if (response.data) {
-                localStorage.setItem('userId', JSON.stringify(response.data));
-                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-            }
+        // Sla gebruiker + token op
+        localStorage.setItem('user', JSON.stringify(userData));
 
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+        // Zet standaard Authorization-header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+      }
+
+      return response.data;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    logout() {
-        return axios.delete('/auth/request').then(() => { // Use DELETE method for logout
-            localStorage.removeItem('userId'); // Clear user data from localStorage
-            delete axios.defaults.headers.common['Authorization']; // Remove Authorization header
-        }).catch((error) => {
-            console.error('Logout failed:', error); // Log logout errors
-            throw error;
-        });
+  logout() {
+    try {
+      // Optioneel: maak logout-aanroep naar server als endpoint bestaat
+      axios.delete('/auth/request').catch(() => {});
+
+      // Verwijder lokale data
+      localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
+    } catch (error) {
+      console.error('Logout failed:', error);
+      throw error;
     }
+  }
 
-    getCurrentUser() {
-        const user = localStorage.getItem('userId');
-        return user ? JSON.parse(user) : null;
-    }
+  getCurrentUser() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
 
+  // Handige helper om header opnieuw te zetten bij page refresh
 }
 
 export default new AuthService();

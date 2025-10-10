@@ -5,7 +5,7 @@ import { LogIn, LogOut, User, Calendar } from "lucide-vue-next";
 import AuthService from '@/services/AuthService';
 
 const router = useRouter();
-const currentUser = ref(AuthService.getCurrentUser());
+const currentUser = (AuthService.getCurrentUser());
 
 const updateCurrentUser = () => {
     currentUser.value = AuthService.getCurrentUser();
@@ -49,7 +49,7 @@ const handleLogout = async () => {
                     <LogOut class="w-4 h-4" /> Logout
                 </button>
                 <span class="flex text-lg text-[#F3F4F6] items-center gap-2">
-                    <User class="w-4 h-4" /> {{ currentUser.user.name }}
+                    <User class="w-4 h-4" /> {{ currentUser.name }}
                 </span>
                 <a href="/verlof"
                     class="flex items-center text-lg gap-2 bg-[#3FB950] text-[#0E3A5B] px-3 py-1 rounded-lg font-semibold hover:bg-[#34a843] transition-colors">

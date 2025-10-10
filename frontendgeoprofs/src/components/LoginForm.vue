@@ -8,7 +8,7 @@
           <label class="block text-sm font-medium text-[#0E3A5B] mb-1">Naam</label>
           <input
             type="text"
-            v-model="username"
+            v-model="name"
             required
             placeholder="Voorbeeldnaam"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#3FB950] focus:border-[#3FB950]"
@@ -52,7 +52,7 @@ import AuthService from '@/services/AuthService';
 export default {
   name: 'LoginForm',
   setup() {
-    const username = ref('');
+    const name = ref('');
     const password = ref('');
     const error = ref('');
     const loading = ref(false);
@@ -66,7 +66,7 @@ export default {
 
       try {
         // Call existing login functionality (AuthService)
-        await AuthService.login(username.value, password.value);
+        await AuthService.login(name.value, password.value);
 
         // Redirect to home or dashboard after a successful login
         router.push('/dashboard');
@@ -81,7 +81,7 @@ export default {
     };
 
     return {
-      username,
+      name,
       password,
       error,
       loading,
