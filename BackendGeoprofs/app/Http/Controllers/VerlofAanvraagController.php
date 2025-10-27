@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\VerlofAanvraag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 
 class VerlofAanvraagController extends Controller
 {
@@ -74,6 +75,20 @@ class VerlofAanvraagController extends Controller
             'startdatum' => 'required|date',
             'einddatum' => 'required|date',
             'status' => 'required',
+        ]);
+        if ($request->get('startdatum') <= Date::today() || $request->get('einddatum') <= Date::today()) {
+            return response()->json([
+                'message' => 'Startdatum en/of einddatum moet in de toekomst zijn!'
+            ], 422);
+        }
+        if ($user->verlofsaldo <= 1)
+        {
+            return response()->json([
+                'message' => 'Geen voldoende verlofsaldo'
+            ], 422);
+        }
+        $user->update([
+           'verlofsaldo' =>  $user->verlofsaldo - 1
         ]);
         //creation
         $aanvraag = VerlofAanvraag::create([
