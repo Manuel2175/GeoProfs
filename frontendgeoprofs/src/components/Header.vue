@@ -33,8 +33,7 @@ const handleLogout = async () => {
             <h1 class="text-3xl font-bold font-[Inter] text-[#F3F4F6]">GeoProfs</h1>
         </a>
 
-        <nav class="flex items-center gap-6 text-sm font-[Inter]">
-            <!-- Show login button if user is not logged in -->
+      <nav class="flex flex-wrap items-center gap-3 md:gap-6 text-sm md:text-base font-[Inter] w-full sm:w-auto justify-center sm:justify-end">            <!-- Show login button if user is not logged in -->
             <template v-if="!currentUser">
                 <button @click="handleLogin"
                     class="flex text-lg text-[#F3F4F6] items-center gap-2 hover:text-[#3FB950] transition-colors">
