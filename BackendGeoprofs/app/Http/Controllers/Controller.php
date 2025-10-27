@@ -8,6 +8,13 @@ namespace App\Http\Controllers;
  *     description="API documentatie voor geoprofs verlofsregistratiesysteem"
  * )
  *
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="BearerAuth"
+ * )
+ *
  * @OA\Server(
  *     url=L5_SWAGGER_CONST_HOST,
  *     description="Local api server"

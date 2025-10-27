@@ -1,8 +1,46 @@
-import { createRouter, createWebHistory } from 'vue-router'
+// src/router/index.js
+import { createRouter, createWebHistory } from 'vue-router';
+import AuthService from '@/services/AuthService';
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@/components/MyCalendar.vue') // Or replace with your desired landing page
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/components/LoginForm.vue')
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/components/Dashboard.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/verlof',
+    name: 'Verlof',
+    component: () => import('@/components/VerlofForm.vue'),
+  }
+];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [],
-})
+  history: createWebHistory(),
+  routes
+});
 
-export default router
+// Navigation guard to protect authenticated routes
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const currentUser = AuthService.getCurrentUser();
+
+  if (requiresAuth && !currentUser) {
+    next('/login');
+  } else {
+    next();
+  }
+});
+
+export default router;
