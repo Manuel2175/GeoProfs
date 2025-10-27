@@ -1,5 +1,5 @@
 <?php
-
+// Controller voor verlofaanvraag model met aanvullend functies om een verlofaanvraag goed te keuren en af te keuren
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -28,6 +28,7 @@ class VerlofAanvraagController extends Controller
      *     )
      * )
      */
+    //ophalen alle verlofaanvragen van user
     public function index(User $user)
     {
         return response()->json($user->aanvragen);
@@ -67,6 +68,7 @@ class VerlofAanvraagController extends Controller
      *     )
      * )
      */
+    // opslaan nieuwe verlofaanvraag die meegestuurd wordt vanuit request resource
     public function store(Request $request, User $user)
     {
         //validation
@@ -135,6 +137,7 @@ class VerlofAanvraagController extends Controller
      *     )
      * )
      */
+    // tonen specifieke verlofaanvraag
     public function show(User $user, VerlofAanvraag $verlofAanvraag)
     {
         return response()->json($verlofAanvraag);
@@ -176,6 +179,7 @@ class VerlofAanvraagController extends Controller
      *     )
      * )
      */
+    // goedkeuren verlofaanvraag door status aan te passen naar goedgekeurd
     public function approve(Request $request, User $userId, VerlofAanvraag $verlofAanvraag)
     {
         if ($userId->role == 'admin') {
@@ -227,6 +231,7 @@ class VerlofAanvraagController extends Controller
      *     )
      * )
      */
+    // verlofaanvraag afwijzen met het toevoegen van afkeuringsreden
     public function reject(Request $request, User $userId, VerlofAanvraag $verlofAanvraag)
     {
         if ($userId->role == 'admin') {
