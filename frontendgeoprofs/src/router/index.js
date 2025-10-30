@@ -1,4 +1,3 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
 import AuthService from '@/services/AuthService';
 
@@ -6,7 +5,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/components/MyCalendar.vue') // Or replace with your desired landing page
+    component: () => import('@/components/MyCalendar.vue')
   },
   {
     path: '/login',
@@ -31,7 +30,6 @@ const router = createRouter({
   routes
 });
 
-// Navigation guard to protect authenticated routes
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const currentUser = AuthService.getCurrentUser();
