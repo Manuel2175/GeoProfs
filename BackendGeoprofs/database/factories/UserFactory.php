@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'surname' => fake()->lastName(),
             'verlofsaldo' => rand(0, 100),
             'password' => Hash::make('Password123'),
-            'role' => Arr::random(['worker', 'admin']),
+            'role' => Arr::random(['worker', 'admin', 'manager', 'HR']),
             'remember_token' => Str::random(10),
         ];
     }
