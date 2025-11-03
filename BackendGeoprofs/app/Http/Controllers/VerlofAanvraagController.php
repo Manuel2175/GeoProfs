@@ -31,7 +31,7 @@ class VerlofAanvraagController extends Controller
     //ophalen alle verlofaanvragen van user
     public function index(User $user)
     {
-        return response()->json($user->aanvragen);
+        return response()->json($user->verlofaanvraags);
     }
 
     /**
@@ -83,14 +83,13 @@ class VerlofAanvraagController extends Controller
                 'message' => 'Startdatum en/of einddatum moet in de toekomst zijn!'
             ], 422);
         }
-        if ($user->verlofsaldo <= 1)
-        {
+        if ($user->verlofsaldo <= 1) {
             return response()->json([
                 'message' => 'Geen voldoende verlofsaldo'
             ], 422);
         }
         $user->update([
-           'verlofsaldo' =>  $user->verlofsaldo - 1
+            'verlofsaldo' => $user->verlofsaldo - 1
         ]);
         //creation
         $aanvraag = VerlofAanvraag::create([
@@ -109,7 +108,7 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}",
+     *     path="/user/{user}/verlofaanvraag/{verlofAanvraag}",
      *     summary="Get a specific verlofaanvraag of a user",
      *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
@@ -121,7 +120,7 @@ class VerlofAanvraagController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Parameter(
-     *         name="verlofaanvraag",
+     *         name="verlofAanvraag",
      *         in="path",
      *         required=true,
      *         description="ID of the verlofaanvraag",
@@ -145,7 +144,7 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}/approve",
+     *     path="/user/{user}/verlofaanvraag/{verlofAanvraag}/approve",
      *     summary="Approve a verlofaanvraag (admin only)",
      *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
@@ -156,7 +155,7 @@ class VerlofAanvraagController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Parameter(
-     *         name="verlofaanvraag",
+     *         name="verlofAanvraag",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer", example=10)
@@ -166,7 +165,7 @@ class VerlofAanvraagController extends Controller
      *         description="Approval status update",
      *         @OA\JsonContent(
      *             required={"status"},
-     *             @OA\Property(property="status", type="string", example="Goedgekeurd")
+     *             @OA\Property(property="status", type="string", example="goedgekeurd")
      *         )
      *     ),
      *     @OA\Response(
@@ -180,23 +179,22 @@ class VerlofAanvraagController extends Controller
      * )
      */
     // goedkeuren verlofaanvraag door status aan te passen naar goedgekeurd
-    public function approve(Request $request, User $userId, VerlofAanvraag $verlofAanvraag)
+    public function approve(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {
-        if ($userId->role == 'admin') {
-            $request->validate([
-                'status' => 'required',
-            ]);
-            $verlofAanvraag->update([
-                'status' => $request->get('status'),
-            ]);
-            return response()->json($verlofAanvraag->reden . 'from:' . $userId->name . ' is approved!');
-        }
-        return response()->json()->setStatusCode(403);
+        $request->validate([
+            'status' => 'required',
+        ]);
+        $verlofAanvraag->update([
+            'status' => $request->status,
+        ]);
+        return response()->json([
+            'message' => 'Verlof aanvraag goedgekeurd',
+        ]);
     }
 
     /**
      * @OA\Put(
-     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}/reject",
+     *     path="/user/{user}/verlofaanvraag/{verlofAanvraag}/reject",
      *     summary="Reject a verlofaanvraag (admin only)",
      *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
@@ -207,7 +205,7 @@ class VerlofAanvraagController extends Controller
      *         @OA\Schema(type="integer", example=1)
      *     ),
      *     @OA\Parameter(
-     *         name="verlofaanvraag",
+     *         name="verlofAanvraag",
      *         in="path",
      *         required=true,
      *         @OA\Schema(type="integer", example=10)
@@ -217,7 +215,7 @@ class VerlofAanvraagController extends Controller
      *         description="Rejection reason and status update",
      *         @OA\JsonContent(
      *             required={"status", "afkeuringsreden"},
-     *             @OA\Property(property="status", type="string", example="Afgekeurd"),
+     *             @OA\Property(property="status", type="string", example="afgekeurd"),
      *             @OA\Property(property="afkeuringsreden", type="string", example="Te weinig vakantiedagen")
      *         )
      *     ),
@@ -232,19 +230,18 @@ class VerlofAanvraagController extends Controller
      * )
      */
     // verlofaanvraag afwijzen met het toevoegen van afkeuringsreden
-    public function reject(Request $request, User $userId, VerlofAanvraag $verlofAanvraag)
+    public function reject(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {
-        if ($userId->role == 'admin') {
-            $request->validate([
-                'status' => 'required',
-                'afkeuringsreden' => 'required',
-            ]);
-            $verlofAanvraag->update([
-                'status' => $request->get('status'),
-                'afkeuringsreden' => $request->get('afkeuringsreden'),
-            ]);
-            return response()->json($verlofAanvraag->reden . 'from:' . $userId->name . ' is rejected!');
-        }
-        return response()->json()->setStatusCode(403);
+        $request->validate([
+            'status' => 'required',
+            'afkeuringsreden' => 'required',
+        ]);
+        $verlofAanvraag->update([
+            'status' => $request->get('status'),
+            'afkeuringsreden' => $request->get('afkeuringsreden'),
+        ]);
+        return response()->json([
+            'message' => 'Verlof aanvraag afgekeurd',
+        ]);
     }
 }
