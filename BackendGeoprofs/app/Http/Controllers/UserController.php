@@ -12,9 +12,9 @@ class UserController extends Controller
      *     summary="Get users",
      *     security={{"BearerAuth": {}}},
      *     tags={"User"},
-     *     @OA\Response(response=200, description=" users returned"),
-     *     @OA\Response(response=401, description="No users"),
-     *     @OA\Response(response=403, description="un authorized")
+     *     @OA\Response(response=200, description=" gebruikers teruggegeven"),
+     *     @OA\Response(response=401, description="geen gebruikers"),
+     *     @OA\Response(response=403, description="niet geauthorizeerd")
      * )
      */
     public function index()
@@ -38,13 +38,13 @@ class UserController extends Controller
      *          name="user",
      *          in="path",
      *          required=true,
-     *          description="ID of the user",
+     *          description="uniquee indentificeerder van gebruiker",
      *          @OA\Schema(type="integer", example=1)
      *      ),
      *     security={{"BearerAuth": {}}},
      *     tags={"User"},
-     *     @OA\Response(response=200, description="User returned"),
-     *     @OA\Response(response=404, description="User not found")
+     *     @OA\Response(response=401, description="geen gebruikers"),
+     * *   @OA\Response(response=403, description="niet geauthorizeerd")
      * )
      */
     public function show(User $user)

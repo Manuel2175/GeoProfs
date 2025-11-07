@@ -51,4 +51,21 @@ class User extends Authenticatable
     {
         return $this->hasMany(VerlofAanvraag::class);
     }
+
+    public function HR(){
+        return $this->where('role', 'HR');
+    }
+
+    public function manager(){
+        return $this->where('role', 'Manager');
+    }
+
+    public function worker()
+    {
+        return $this->where('role', 'worker');
+    }
+    public function admin()
+    {
+        return $this->where('role', 'admin');
+    }
 }

@@ -103,13 +103,13 @@
                 "operationId": "23679253d16f34d2972249751e3631dd",
                 "responses": {
                     "200": {
-                        "description": " users returned"
+                        "description": " gebruikers teruggegeven"
                     },
                     "401": {
-                        "description": "No users"
+                        "description": "geen gebruikers"
                     },
                     "403": {
-                        "description": "un authorized"
+                        "description": "niet geauthorizeerd"
                     }
                 },
                 "security": [
@@ -130,7 +130,7 @@
                     {
                         "name": "user",
                         "in": "path",
-                        "description": "ID of the user",
+                        "description": "uniquee indentificeerder van gebruiker",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -139,11 +139,11 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "User returned"
+                    "401": {
+                        "description": "geen gebruikers"
                     },
-                    "404": {
-                        "description": "User not found"
+                    "403": {
+                        "description": "niet geauthorizeerd"
                     }
                 },
                 "security": [
