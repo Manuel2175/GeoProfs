@@ -31,7 +31,7 @@ class VerlofAanvraagController extends Controller
     //ophalen alle verlofaanvragen van user
     public function index(User $user)
     {
-        $aanvragen = $user->aanvragen()->with('user')->get();
+        $aanvragen = $user->verlofaanvraags()->with('user')->get();
         return response()->json($aanvragen);
     }
 
