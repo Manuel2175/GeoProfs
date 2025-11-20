@@ -90,9 +90,6 @@ class VerlofAanvraagController extends Controller
                 'message' => 'Geen voldoende verlofsaldo'
             ], 422);
         }
-        $user->update([
-           'verlofsaldo' =>  $user->verlofsaldo - 1
-        ]);
         //creation
         $aanvraag = VerlofAanvraag::create([
             'reden' => $request->get('reden'),
@@ -186,6 +183,9 @@ class VerlofAanvraagController extends Controller
         if ($userId->role == 'admin') {
             $request->validate([
                 'status' => 'required',
+            ]);
+            $userId->update([
+                'verlofsaldo' =>  $userId->verlofsaldo - 1
             ]);
             $verlofAanvraag->update([
                 'status' => $request->get('status'),
