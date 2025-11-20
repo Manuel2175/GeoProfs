@@ -96,6 +96,7 @@ export default {
             rows="4"
             :disabled="loading"
             v-model="reden"
+            maxlength="100"
             placeholder="Bijvoorbeeld: privé afspraak"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#3FB950] focus:border-[#3FB950]"
           ></textarea>

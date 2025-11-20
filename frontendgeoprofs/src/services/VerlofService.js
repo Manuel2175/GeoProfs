@@ -1,14 +1,30 @@
-// src/services/verlof.service.js
 import axios from 'axios';
 
 class VerlofService {
   async aanvragen(user, data) {
-    try {
-      const response = await axios.post(`/user/${user}/verlofaanvraag`, data);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axios.post(`/user/${user}/verlofaanvraag`, data);
+    return response.data;
+  }
+
+  async getVerloven(user) {
+    const response = await axios.get(`/user/${user}/verlofaanvraag`);
+    return response.data;
+  }
+
+  async approve(user, verlofaanvraag) {
+    const response = await axios.put(
+      `/user/${user}/verlofaanvraag/${verlofaanvraag}/approve`,
+      { status: 'goedgekeurd' }
+    );
+    return response.data;
+  }
+
+  async reject(user, verlofaanvraag, reden) {
+    const response = await axios.put(
+      `/user/${user}/verlofaanvraag/${verlofaanvraag}/reject`,
+      { status: 'afgewezen', afkeuringsreden: reden }
+    );
+    return response.data;
   }
 }
 
