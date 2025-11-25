@@ -7,9 +7,9 @@
 
     <ul v-else class="space-y-2">
       <li
-          v-for="verlof in verloven"
-          :key="verlof.id"
-          class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
+        v-for="verlof in verloven"
+        :key="verlof.id"
+        class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
         <div>
           <p><strong>Naam:</strong> {{ verlof.user.name }}</p>
           <p><strong>Periode:</strong> {{ verlof.startdatum }} – {{ verlof.einddatum }}</p>
@@ -20,21 +20,21 @@
         <div class="flex flex-col space-y-2">
           <div class="flex space-x-2">
             <button
-                @click="approveVerlof(verlof)"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+              @click="approveVerlof(verlof)"
+              class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
               Approve
             </button>
             <button
-                @click="denyVerlof(verlof)"
-                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+              @click="denyVerlof(verlof)"
+              class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
               Deny
             </button>
           </div>
           <input
-              type="text"
-              placeholder="Reden voor afkeur"
-              v-model="afkeurReden[verlof.id]"
-              class="border border-gray-300 rounded-lg px-2 py-1 w-full"
+            type="text"
+            placeholder="Reden voor afkeur"
+            v-model="afkeurReden[verlof.id]"
+            class="border border-gray-300 rounded-lg px-2 py-1 w-full"
           />
         </div>
       </li>
