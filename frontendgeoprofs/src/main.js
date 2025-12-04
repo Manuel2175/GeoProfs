@@ -4,10 +4,9 @@ import App from './App.vue'
 import router from './router'
 import VCalendar from 'v-calendar'
 import 'v-calendar/style.css'
-import './services/axios-config'; // Import global Axios config
+import './services/axios-config';
 import AuthService from './services/AuthService';
 
-// Log the current user
 const currentUser = AuthService.getCurrentUser();
 console.log('Current Logged In User:', currentUser);
 

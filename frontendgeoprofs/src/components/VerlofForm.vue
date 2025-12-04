@@ -67,31 +67,33 @@ export default {
 
         <!-- Begin datum -->
         <div>
-          <label class="block text-sm font-medium text-[#0E3A5B] mb-1">Begin datum</label>
+          <label for="startdatum" class="block text-sm font-medium text-[#0E3A5B] mb-1">Begin datum</label>
           <input
             required
             v-model="startdatum"
             type="date"
             :disabled="loading"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#3FB950] focus:border-[#3FB950]"
+            id="startdatum"
           />
         </div>
 
         <!-- Eind datum -->
         <div>
-          <label class="block text-sm font-medium text-[#0E3A5B] mb-1">Eind datum</label>
+          <label for="einddatum" class="block text-sm font-medium text-[#0E3A5B] mb-1">Eind datum</label>
           <input
             required
             v-model="einddatum"
             :disabled="loading"
             type="date"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#3FB950] focus:border-[#3FB950]"
+            id="einddatum"
           />
         </div>
 
         <!-- Opmerking -->
         <div>
-          <label class="block text-sm font-medium text-[#0E3A5B] mb-1">Opmerking (optioneel)</label>
+          <label for="reden" class="block text-sm font-medium text-[#0E3A5B] mb-1">Opmerking (optioneel)</label>
           <textarea
             rows="4"
             :disabled="loading"
@@ -99,6 +101,7 @@ export default {
             maxlength="100"
             placeholder="Bijvoorbeeld: privé afspraak"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#3FB950] focus:border-[#3FB950]"
+            id="reden"
           ></textarea>
         </div>
 
