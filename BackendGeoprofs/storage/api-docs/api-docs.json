@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/api",
+            "url": "http://laravel.test/api",
             "description": "Local api server"
         }
     ],
@@ -51,7 +51,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "testuser"
+                                        "example": "Dr. Emmett Flatley"
                                     },
                                     "password": {
                                         "type": "string",
@@ -85,6 +85,65 @@
                     },
                     "401": {
                         "description": "Not authenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get users",
+                "operationId": "23679253d16f34d2972249751e3631dd",
+                "responses": {
+                    "200": {
+                        "description": " gebruikers teruggegeven"
+                    },
+                    "401": {
+                        "description": "geen gebruikers"
+                    },
+                    "403": {
+                        "description": "niet geauthorizeerd"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/{user}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get specific user",
+                "operationId": "6f888b021bf178e7e5dcbfe7746c2f9e",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "uniquee indentificeerder van gebruiker",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "geen gebruikers"
+                    },
+                    "403": {
+                        "description": "niet geauthorizeerd"
                     }
                 },
                 "security": [
@@ -381,6 +440,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "User",
+            "description": "User"
         },
         {
             "name": "Verlofaanvraag",

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('surname');
             $table->double('verlofsaldo')->default(0);
             $table->string('password');
-            $table->string('role')->default('worker');
+            $table->enum('role', ['admin', 'worker', 'HR', 'manager', 'directie'])->default('worker');
             $table->rememberToken();
             $table->timestamps();
         });
