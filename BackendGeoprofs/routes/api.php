@@ -11,14 +11,12 @@ Route::post('/auth/request', [AuthenticatedController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/request', [AuthenticatedController::class, 'getAuthenticatedUser']);
     Route::delete('/auth/request', [AuthenticatedController::class, 'logout']);
-
+    Route::resource('user', UserController::class);
     // Verlofaanvraag routes
     Route::prefix('user/{user}')->group(function () {
         Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);
-        Route::put('verlofaanvraag/{verlofaanvraag}/reject', [VerlofAanvraagController::class, 'reject'])
-            ->name('user.verlofaanvraag.reject');
-        Route::put('verlofaanvraag/{verlofaanvraag}/approve', [VerlofAanvraagController::class, 'approve'])
-            ->name('user.verlofaanvraag.approve');
+        Route::put('/verlofaanvraag/{verlofAanvraag}/reject', [VerlofAanvraagController::class, 'reject']);
+        Route::put('/verlofaanvraag/{verlofAanvraag}/approve', [VerlofAanvraagController::class, 'approve']);
     });
 
     Route::apiResource('user', UserController::class)->middleware(\App\Http\Middleware\checkRole::class);

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->longText('reden');
             $table->date('startdatum');
             $table->date('einddatum');
-            $table->enum('status', ['aangevraagd', 'goedgekeurd', 'afgewezen'])->default('aangevraagd');
+            $table->string('status')->default('aangevraagd');
             $table->longText('afkeuringsreden')->nullable();
             $table->timestamps();
         });

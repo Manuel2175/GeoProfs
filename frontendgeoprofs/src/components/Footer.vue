@@ -3,7 +3,7 @@ import { Mail, Phone, MapPin } from "lucide-vue-next";
 </script>
 
 <template>
-  <footer class="bg-[#0E3A5B] text-[#F3F4F6] px-6 py-8 mt-12">
+  <footer class="bg-[#0E3A5B] text-[#F3F4F6] px-6 py-8 mt-12 sticky bottom-0 w-screen">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
       <h1 class="text-2xl font-bold font-[Inter]">GeoProfs</h1>
 

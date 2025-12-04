@@ -22,6 +22,11 @@ const routes = [
     path: '/verlof',
     name: 'Verlof',
     component: () => import('@/components/VerlofForm.vue'),
+  },
+  {
+    path: '/verlof-aanvragen',
+    name: 'Verlof Aanvragen',
+    component: () => import('@/components/TeamLeaveRequests.vue'),
   }
 ];
 
