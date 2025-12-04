@@ -7,18 +7,15 @@
     uses( RefreshDatabase::class);
     test('user can create a VerlofAanvraag', function () {
         // Create a test user
-        $user = User::factory()->create([
-            'name' => 'name1',
-            'password' => bcrypt('password1'),
-        ]);
+        $user = User::factory()->create();
 
         // Authenticate as that user
         $this->actingAs($user, 'sanctum');
 
         // Send POST to the correct route
         $response = $this->postJson("/api/user/{$user->id}/verlofaanvraag", [
-            'startdatum' => '2025-10-12',
-            'einddatum' => '2025-10-14',
+            'startdatum' => '2026-12-04',
+            'einddatum' => '2026-12-24',
             'reden' => 'ziekte',
             'status'=> 'aangevraagd',
         ]);
@@ -27,8 +24,8 @@
 
         $this->assertDatabaseHas('verlof_aanvraags', [
             'user_id' => $user->id,
-            'startdatum' => '2025-10-12',
-            'einddatum' => '2025-10-14',
+            'startdatum' => '2026-12-04',
+            'einddatum' => '2026-12-24',
             'reden' => 'ziekte',
             'status'=> 'aangevraagd',
         ]);

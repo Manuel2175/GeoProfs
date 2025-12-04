@@ -94,6 +94,40 @@
                 ]
             }
         },
+        "/user/{user}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get a specific user object",
+                "operationId": "6f888b021bf178e7e5dcbfe7746c2f9e",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verlofaanvraag retrieved successfully"
+                    },
+                    "422": {
+                        "description": "Gebruiker is een admin of hr medewerker.!"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
         "/user/{user}/verlofaanvraag": {
             "get": {
                 "tags": [
@@ -381,6 +415,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "User",
+            "description": "User"
         },
         {
             "name": "Verlofaanvraag",
