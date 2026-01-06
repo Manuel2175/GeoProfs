@@ -143,16 +143,10 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}/approve",
+     *     path="/verlofaanvraag/{verlofaanvraag}/approve",
      *     summary="Approve a verlofaanvraag (admin only)",
      *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
-     *     @OA\Parameter(
-     *         name="user",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer", example=1)
-     *     ),
      *     @OA\Parameter(
      *         name="verlofaanvraag",
      *         in="path",
@@ -164,7 +158,7 @@ class VerlofAanvraagController extends Controller
      *         description="Approval status update",
      *         @OA\JsonContent(
      *             required={"status"},
-     *             @OA\Property(property="status", type="string", example="Goedgekeurd")
+     *             @OA\Property(property="status", type="string", example="goedgekeurd")
      *         )
      *     ),
      *     @OA\Response(
@@ -178,22 +172,26 @@ class VerlofAanvraagController extends Controller
      * )
      */
     // goedkeuren verlofaanvraag door status aan te passen naar goedgekeurd
-    public function approve(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
+    public function approve(Request $request, VerlofAanvraag $verlofAanvraag)
     {
-        if ($user->role == 'admin') {
-            $request->validate([
-                'status' => 'required',
-            ]);
-            $user->update([
-                'verlofsaldo' =>  $user->verlofsaldo - 1
-            ]);
-            $verlofAanvraag->update([
-                'status' => $request->get('status'),
-            ]);
-            return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is approved!');
+        if (auth()->user()->role !== 'admin') {
+            return response()->json([], 403);
         }
-        return response()->json()->setStatusCode(403);
+
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        $user = $verlofAanvraag->user;
+
+        $user->decrement('verlofsaldo', 1);
+
+        $verlofAanvraag->status = $request->status;
+        $verlofAanvraag->save();
+
+        return response()->json('Verlofaanvraag is goedgekeurd');
     }
+
 
     /**
      * @OA\Put(
