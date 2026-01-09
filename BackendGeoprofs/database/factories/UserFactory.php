@@ -25,7 +25,8 @@ class UserFactory extends Factory
             'surname' => fake()->lastName(),
             'verlofsaldo' => rand(0, 100),
             'password' => Hash::make('Password123'),
-            'role' => Arr::random(['worker', 'admin', 'manager', 'HR']),
+            'role' => Arr::random(['worker', 'manager', 'HR']),
+            'afdeling' => Arr::random(["Landmeten_field_teams", "Geo-ICT & Data", "Drone & Imagining", "Bedrijfvoering"]),
             'remember_token' => Str::random(10),
         ];
     }

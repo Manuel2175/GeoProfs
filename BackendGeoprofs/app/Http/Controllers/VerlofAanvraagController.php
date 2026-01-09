@@ -54,8 +54,8 @@ class VerlofAanvraagController extends Controller
      *         @OA\JsonContent(
      *             required={"reden", "startdatum", "einddatum", "status"},
      *             @OA\Property(property="reden", type="string", example="Vakantie"),
-     *             @OA\Property(property="startdatum", type="string", format="date", example="2025-07-01"),
-     *             @OA\Property(property="einddatum", type="string", format="date", example="2025-07-10"),
+     *             @OA\Property(property="startdatum", type="string", format="date", example="2026-07-01"),
+     *             @OA\Property(property="einddatum", type="string", format="date", example="2026-07-10"),
      *             @OA\Property(property="status", type="string", example="aangevraagd")
      *         )
      *     ),
@@ -72,6 +72,7 @@ class VerlofAanvraagController extends Controller
     // opslaan nieuwe verlofaanvraag die meegestuurd wordt vanuit request resource
     public function store(Request $request, User $user)
     {
+
         //validation
         $request->validate([
             'reden' => 'required',
@@ -180,7 +181,7 @@ class VerlofAanvraagController extends Controller
     // goedkeuren verlofaanvraag door status aan te passen naar goedgekeurd
     public function approve(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {
-        if ($user->role == 'admin') {
+
             $request->validate([
                 'status' => 'required',
             ]);
@@ -191,8 +192,7 @@ class VerlofAanvraagController extends Controller
                 'status' => $request->get('status'),
             ]);
             return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is approved!');
-        }
-        return response()->json()->setStatusCode(403);
+
     }
 
     /**
@@ -235,7 +235,6 @@ class VerlofAanvraagController extends Controller
     // verlofaanvraag afwijzen met het toevoegen van afkeuringsreden
     public function reject(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {
-        if ($user->role == 'admin') {
             $request->validate([
                 'status' => 'required',
                 'afkeuringsreden' => 'required',
@@ -245,7 +244,6 @@ class VerlofAanvraagController extends Controller
                 'afkeuringsreden' => $request->get('afkeuringsreden'),
             ]);
             return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is rejected!');
-        }
-        return response()->json()->setStatusCode(403);
+
     }
 }
