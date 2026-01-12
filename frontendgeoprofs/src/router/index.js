@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/Department-admin',
     name: 'Afdeling-admin',
-    component: () => import('@/components/DepartmentViewAdmin.vue'),
+    component: () => import('@/components/DepartmentView.vue'),
   },
 ];
 
