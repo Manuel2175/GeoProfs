@@ -17,9 +17,15 @@ class DatabaseSeeder extends Seeder
         //generate workers and admins
         User::factory(10)->create();
         User::create([
-            'name' => 'user1',
-            'surname' => 'user2',
-            'password' => Hash::make('pass1'),
+            'name' => 'user',
+            'surname' => 'user',
+            'password' => Hash::make('pass'),
         ]);
+        User::create([
+                    'name' => 'userAdmin',
+                    'surname' => 'user',
+                    'role' => 'admin',
+                    'password' => Hash::make('pass'),
+                ]);
     }
 }
