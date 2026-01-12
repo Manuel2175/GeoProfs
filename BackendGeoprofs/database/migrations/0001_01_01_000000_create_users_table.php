@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('surname');
             $table->double('verlofsaldo')->default(0);
             $table->string('password');
-            $table->enum('role', ['admin', 'worker', 'HR', 'manager', 'directie'])->default('worker');
+            $table->enum('role', ['worker', 'HR', 'manager', 'directie'])->default('worker');
+            $table->enum('afdeling', ["Landmeten_field_teams", "Geo-ICT & Data", "Drone & Imagining", "Bedrijfvoering"])->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
