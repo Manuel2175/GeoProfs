@@ -15,7 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/auth/request', [AuthenticatedController::class, 'logout']);
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/user/{user}', [UserController::class, 'show']);
-    Route::put('/user/{user}', [UserController::class, 'update'])->middleware(checkHR::class);
+    Route::put('/user/{user}', [UserController::class, 'update'])->middleware(\App\Http\Middleware\checkRole::class);
 
         Route::prefix('user/{user}')->group(function () {
             Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);

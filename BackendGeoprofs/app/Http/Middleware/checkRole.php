@@ -14,19 +14,30 @@ class checkRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->admin() == "admin") {
-           return $next($request);
-        }
-        elseif (auth()->check() && auth()->user()->manager() == "manager") {
-            return response()->json(User::where('role', 'worker')->get());
-        }
-        elseif (auth()->check() && auth()->user()->HR() == "HR") {
-            return $next($request);
-        }else{
+        $user = auth()->user();
+
+        // Geen ingelogde user → abort
+        if (!$user) {
             abort(403, 'Unauthorized.');
         }
 
+        // Admin en HR mogen alles
+       if (in_array(strtolower($user->role), ['admin', 'hr'])) {
+           return $next($request);
+       }
+
+        // Manager mag alleen GET requests naar workers
+        if ($user->role === 'manager') {
+            if ($request->isMethod('GET')) {
+                return response()->json(User::where('role', 'worker')->get());
+            } else {
+                abort(403, 'Unauthorized.');
+            }
+        }
+
+        // Alle andere gevallen → geen toegang
+        abort(403, 'Unauthorized.');
     }
 }

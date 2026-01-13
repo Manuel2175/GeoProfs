@@ -11,6 +11,9 @@ const currentUser = ref(null)
 // Actieve filter
 const selectedRole = ref('all')
 
+// Edit state
+const editingUser = ref(null)
+
 // Loading en error state
 const loading = ref(false)
 const error = ref('')
@@ -59,6 +62,43 @@ const filteredUsers = computed(() => {
   if (selectedRole.value === 'all') return users.value
   return users.value.filter(u => u.role === selectedRole.value)
 })
+
+/**
+ * Open edit modal
+ */
+const openEdit = (user) => {
+  editingUser.value = { ...user } // maak kopie om directe mutatie te voorkomen
+}
+
+/**
+ * Opslaan → database + lokale state
+ */
+const saveUser = async () => {
+  try {
+    const { id, name, surname, verlofsaldo, role } = editingUser.value
+
+    // PUT request naar backend
+    await axios.put(`/user/${id}`, {
+      name,
+      surname,
+      verlofsaldo,
+      role
+    })
+
+    // Update lokaal zonder refetch
+    const index = users.value.findIndex(u => u.id === id)
+    users.value[index] = { ...editingUser.value }
+
+    editingUser.value = null
+  } catch (err) {
+    console.error('Opslaan mislukt:', err)
+    alert(
+      err.response?.status === 403
+        ? 'Geen rechten om deze gebruiker te wijzigen'
+        : 'Opslaan mislukt'
+    )
+  }
+}
 </script>
 
 <template>
@@ -107,6 +147,7 @@ const filteredUsers = computed(() => {
           <th class="p-2 border">Achternaam</th>
           <th class="p-2 border">Verlofsaldo</th>
           <th class="p-2 border">Rol</th>
+          <th v-if="isAdminOrHR" class="p-2 border">Actie</th>
         </tr>
         </thead>
 
@@ -121,15 +162,49 @@ const filteredUsers = computed(() => {
           <td class="p-2 border">{{ user.surname }}</td>
           <td class="p-2 border">{{ user.verlofsaldo }}</td>
           <td class="p-2 border">{{ user.role }}</td>
+          <td v-if="isAdminOrHR" class="p-2 border">
+            <button class="text-blue-600 hover:underline" @click="openEdit(user)">
+              Wijzig
+            </button>
+          </td>
         </tr>
 
         <tr v-if="!loading && filteredUsers.length === 0">
-          <td colspan="5" class="p-4 text-center text-gray-500">
+          <td colspan="6" class="p-4 text-center text-gray-500">
             Geen gebruikers gevonden
           </td>
         </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Edit modal -->
+    <div
+      v-if="editingUser"
+      class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center"
+    >
+      <div class="bg-white p-6 rounded w-full max-w-md">
+        <h2 class="text-xl font-bold mb-4">Gebruiker wijzigen</h2>
+
+        <div class="flex flex-col gap-2">
+          <input v-model="editingUser.name" class="border p-2 rounded" placeholder="Naam" />
+          <input v-model="editingUser.surname" class="border p-2 rounded" placeholder="Achternaam" />
+          <input type="number" v-model="editingUser.verlofsaldo" class="border p-2 rounded" placeholder="Verlofsaldo" />
+          <select v-model="editingUser.role" class="border p-2 rounded">
+            <option value="worker">Worker</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-4">
+          <button @click="editingUser = null" class="px-4 py-2 bg-gray-300 rounded">
+            Annuleer
+          </button>
+          <button @click="saveUser" class="px-4 py-2 bg-blue-600 text-white rounded">
+            Opslaan
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

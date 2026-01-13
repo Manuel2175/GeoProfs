@@ -102,6 +102,7 @@ class UserController extends Controller
             'surname' => 'string|max:255',
             'password' => 'string|min:8',
             'verlofsaldo' => 'numeric',
+            'role' => 'string|in:worker,hr,admin|nullable',
         ]);
 
         $user->update($validated);
