@@ -2,8 +2,11 @@
 // Controller voor verlofaanvraag model met aanvullend functies om een verlofaanvraag goed te keuren en af te keuren
 namespace App\Http\Controllers;
 
+use App\Models\Rooster_week;
 use App\Models\User;
 use App\Models\VerlofAanvraag;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 
@@ -188,7 +191,30 @@ class VerlofAanvraagController extends Controller
 
         $verlofAanvraag->status = $request->status;
         $verlofAanvraag->save();
+        $start = Carbon::parse($verlofAanvraag->startdatum);
+        $eind = Carbon::parse($verlofAanvraag->einddatum);
+        $periode = CarbonPeriod::create($start, $eind);
+        Carbon::setLocale('nl');
+        setlocale(LC_TIME, 'nl_NL.UTF-8');
 
+        foreach ($periode as $datum) {
+            $weeknummer = $datum->weekOfYear;
+            $dagNaam = $datum->translatedFormat('l');
+            $week = Rooster_week::where('weeknummer', $weeknummer)->first();
+            if (!$week) {
+                continue;
+            }
+            $dag = $week->dagen()
+                ->where('name', $dagNaam)
+                ->first();
+            if (!$dag) {
+                continue;
+            }
+            $dag->update([
+                'ochtend' => 0,
+                'middag'  => 0,
+            ]);
+        }
         return response()->json('Verlofaanvraag is goedgekeurd');
     }
 
