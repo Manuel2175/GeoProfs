@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Date;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -67,5 +68,21 @@ class User extends Authenticatable
     public function admin()
     {
         return $this->where('role', 'admin');
+    }
+    public function roosters()
+    {
+        return $this->belongsToMany(
+            Rooster_week::class,
+            'rooster_week_user',
+            'user_id',
+            'rooster_week_id'
+        );
+    }
+    public function vandaag()
+    {
+        $datum = Date::now();
+        Date::setLocale('nl');
+        $week = Rooster_week::where('weeknummer', $datum->isoWeek)->first();
+        return $week->dagen()->where('name', $datum->translatedFormat('l'))->first();
     }
 }
