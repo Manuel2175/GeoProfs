@@ -241,6 +241,40 @@
                 ]
             }
         },
+        "/user/{user}/notifications": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get notifications of the user",
+                "operationId": "99148c34f6aacb5376d5b87c23b965c2",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "uniquee indentificeerder van gebruiker",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "geen gebruikers"
+                    },
+                    "403": {
+                        "description": "niet geauthorizeerd"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
         "/user/{user}/verlofaanvraag": {
             "get": {
                 "tags": [

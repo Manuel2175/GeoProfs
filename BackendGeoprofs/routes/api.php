@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);
         Route::put('/verlofaanvraag/{verlofAanvraag}/reject', [VerlofAanvraagController::class, 'reject']);
         Route::apiResource('rooster_week', RoosterWeekController::class);
+        Route::get('/notifications', [UserController::class, 'notifications']);
     });
 
     Route::apiResource('user', UserController::class)->middleware(checkRole::class);

@@ -2,6 +2,7 @@
 // Controller voor verlofaanvraag model met aanvullend functies om een verlofaanvraag goed te keuren en af te keuren
 namespace App\Http\Controllers;
 
+use App\Events\VerlofAangevraagd;
 use App\Models\Rooster_week;
 use App\Models\User;
 use App\Models\VerlofAanvraag;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 
 class VerlofAanvraagController extends Controller
 {
@@ -101,6 +103,7 @@ class VerlofAanvraagController extends Controller
             'status' => $request->get('status'),
             'user_id' => $user->id,
         ]);
+        VerlofAangevraagd::dispatch($aanvraag);
         //return with succes
         return response()->json([
             'message' => 'Aanvraag created',
