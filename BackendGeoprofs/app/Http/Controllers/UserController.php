@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -96,7 +97,12 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-
+        Log::channel('daily')->info('User geupdate door', [
+            'user_id' => $request->user()->id,
+            'username' => $request->user()->name,
+            'ip' => $request->ip(),
+            'time' => now()->toDateTimeString(),
+        ]);
         $validated = $request->validate([
             'name' => 'string|max:255',
             'surname' => 'string|max:255',

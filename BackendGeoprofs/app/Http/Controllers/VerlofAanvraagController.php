@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\VerlofAanvraag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 
 class VerlofAanvraagController extends Controller
 {
@@ -191,6 +192,12 @@ class VerlofAanvraagController extends Controller
             $verlofAanvraag->update([
                 'status' => $request->get('status'),
             ]);
+        Log::channel('daily')->info('Verlof goedgekeurd door', [
+            'user_id' => $request->user()->id,
+            'username' => $request->user()->name,
+            'ip' => $request->ip(),
+            'time' => now()->toDateTimeString(),
+        ]);
             return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is approved!');
 
     }
@@ -239,6 +246,12 @@ class VerlofAanvraagController extends Controller
                 'status' => 'required',
                 'afkeuringsreden' => 'required',
             ]);
+        Log::channel('daily')->info('Verlof afgewezen door', [
+            'user_id' => $request->user()->id,
+            'username' => $request->user()->name,
+            'ip' => $request->ip(),
+            'time' => now()->toDateTimeString(),
+        ]);
             $verlofAanvraag->update([
                 'status' => $request->get('status'),
                 'afkeuringsreden' => $request->get('afkeuringsreden'),
