@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        VerlofAanvraag::observe(VerlofAanvraagObserver::class);
         User::observe(UserObserver::class);
 
     }
