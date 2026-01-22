@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Mail\GebruikerHeeftVerlofAangevraagd;
 use App\Models\VerlofAanvraag;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,12 +35,9 @@ class VerlofAangevraagdNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail($notifiable): MailMessage
+    public function toMail($notifiable): GebruikerHeeftVerlofAangevraagd
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        return (new GebruikerHeeftVerlofAangevraagd($this->verlofAanvraag))->to($notifiable->email);
     }
 
     /**
