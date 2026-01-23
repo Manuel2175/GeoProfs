@@ -22,8 +22,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'surname',
-        'password',
-        'verlofsaldo'
+        'verlofsaldo',
+        'role',
+        'afdeling'
     ];
 
     /**
@@ -53,21 +54,17 @@ class User extends Authenticatable
         return $this->hasMany(VerlofAanvraag::class);
     }
 
-    public function HR(){
-        return $this->where('role', 'HR');
+    public function isHR(){
+        return $this->role === 'HR';
     }
 
-    public function manager(){
-        return $this->where('role', 'Manager');
+    public function isManager(){
+        return $this->role === 'manager';
     }
 
-    public function worker()
+    public function isWorker(): bool
     {
-        return $this->where('role', 'worker');
-    }
-    public function admin()
-    {
-        return $this->where('role', 'admin');
+        return $this->role === 'worker';
     }
     public function roosters()
     {

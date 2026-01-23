@@ -17,7 +17,7 @@ class AuthenticatedController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"name","password"},
-     *             @OA\Property(property="name", type="string", example="Dr. Emmett Flatley"),
+     *             @OA\Property(property="name", type="string", example="Brycen Veum"),
      *             @OA\Property(property="password", type="string", format="password", example="Password123")
      *         )
      *     ),
