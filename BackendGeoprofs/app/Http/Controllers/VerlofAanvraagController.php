@@ -2,6 +2,8 @@
 // Controller voor verlofaanvraag model met aanvullend functies om een verlofaanvraag goed te keuren en af te keuren
 namespace App\Http\Controllers;
 
+use App\Events\VerlofAangevraagd;
+use App\Models\Rooster_week;
 use App\Models\User;
 use App\Models\VerlofAanvraag;
 use Illuminate\Http\Request;
@@ -101,6 +103,7 @@ class VerlofAanvraagController extends Controller
             'status' => $request->get('status'),
             'user_id' => $user->id,
         ]);
+        VerlofAangevraagd::dispatch($aanvraag);
         Log::channel('daily')->info('User created a verlofaanvraag', [
             'user_id' => $request->user()->id,
             'username' => $request->user()->name,

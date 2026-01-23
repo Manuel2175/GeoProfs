@@ -118,4 +118,25 @@ class UserController extends Controller
     {
         //
     }
+    /**
+     * @OA\Get(
+     *     path="/user/{user}/notifications",
+     *     summary="Get notifications of the user",
+     *     @OA\Parameter(
+     *          name="user",
+     *          in="path",
+     *          required=true,
+     *          description="uniquee indentificeerder van gebruiker",
+     *          @OA\Schema(type="integer", example=1)
+     *      ),
+     *     security={{"BearerAuth": {}}},
+     *     tags={"User"},
+     *     @OA\Response(response=401, description="geen gebruikers"),
+     * *   @OA\Response(response=403, description="niet geauthorizeerd")
+     * )
+     */
+    public function notifications(User $user)
+    {
+        return response()->json($user->notifications);
+    }
 }
