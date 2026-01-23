@@ -55,6 +55,7 @@ onMounted(async () => {
     <!-- Week Navigation -->
     <div class="flex items-center justify-between bg-white shadow-md rounded-xl p-4">
       <button
+        data-testid="prev-week"
         @click="previousWeek"
         :disabled="currentWeek <= 1"
         class="flex items-center justify-center w-10 h-10 rounded-lg transition-colors"
@@ -71,6 +72,7 @@ onMounted(async () => {
       </div>
 
       <button
+        data-testid="next-week"
         @click="nextWeek"
         class="flex items-center justify-center w-10 h-10 rounded-lg bg-[#0E3A5B] text-white hover:bg-[#0A2A43] transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"

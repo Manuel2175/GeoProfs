@@ -27,7 +27,12 @@ const routes = [
     path: '/verlof-aanvragen',
     name: 'Verlof Aanvragen',
     component: () => import('@/components/TeamLeaveRequests.vue'),
-  }
+  },
+  {
+    path: '/Department-admin',
+    name: 'Afdeling-admin',
+    component: () => import('@/components/DepartmentView.vue'),
+  },
 ];
 
 const router = createRouter({
