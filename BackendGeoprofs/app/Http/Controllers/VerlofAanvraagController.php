@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\VerlofAanvraag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 
 class VerlofAanvraagController extends Controller
 {
@@ -80,6 +81,7 @@ class VerlofAanvraagController extends Controller
             'einddatum' => 'required|date',
             'status' => 'required',
         ]);
+
         if ($request->get('startdatum') <= Date::today() || $request->get('einddatum') <= Date::today()) {
             return response()->json([
                 'message' => 'Startdatum en/of einddatum moet in de toekomst zijn!'
@@ -98,6 +100,15 @@ class VerlofAanvraagController extends Controller
             'einddatum' => $request->get('einddatum'),
             'status' => $request->get('status'),
             'user_id' => $user->id,
+        ]);
+        Log::channel('daily')->info('User created a verlofaanvraag', [
+            'user_id' => $request->user()->id,
+            'username' => $request->user()->name,
+            'reden' => $aanvraag->reden,
+            'startDatum' => $aanvraag->startdatum,
+            'einddatum' => $aanvraag->einddatum,
+            'ip' => $request->ip(),
+            'time' => now()->toDateTimeString(),
         ]);
         //return with succes
         return response()->json([
@@ -191,6 +202,12 @@ class VerlofAanvraagController extends Controller
             $verlofAanvraag->update([
                 'status' => $request->get('status'),
             ]);
+            Log::channel('daily')->info('User heeft verlofaanvraag goedgekeurd', [
+                'user_id' => $request->user()->id,
+                'username' => $request->user()->name,
+                'ip' => $request->ip(),
+                'time' => now()->toDateTimeString(),
+            ]);
             return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is approved!');
 
     }
@@ -242,6 +259,12 @@ class VerlofAanvraagController extends Controller
             $verlofAanvraag->update([
                 'status' => $request->get('status'),
                 'afkeuringsreden' => $request->get('afkeuringsreden'),
+            ]);
+            Log::channel('daily')->info('User heeft verlofaanvraag afgekeurd', [
+                'user_id' => $request->user()->id,
+                'username' => $request->user()->name,
+                'ip' => $request->ip(),
+                'time' => now()->toDateTimeString(),
             ]);
             return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is rejected!');
 

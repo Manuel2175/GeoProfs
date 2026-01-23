@@ -1,178 +1,146 @@
-<template>
-  <div class="text-center section">
-    <h2 class="h2">Custom Calendars</h2>
-    <p class="text-lg font-medium text-gray-600 mb-6">
-      Roll your own calendars using scoped slots
-    </p>
-    <v-calendar
-      class="custom-calendar max-w-full"
-      :masks="masks"
-      :attributes="attributes"
-      disable-page-swipe
-      is-expanded
-    >
-      <template v-slot:day-content="{ day, attributes }">
-        <div class="flex flex-col h-full z-10 overflow-hidden">
-          <span class="day-label text-sm text-gray-900">{{ day.day }}</span>
-          <div class="flex-grow overflow-y-auto overflow-x-auto">
-            <p
-              v-for="attr in attributes"
-              :key="attr.key"
-              class="text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
-              :class="attr.customData.class"
-            >
-              {{ attr.customData.title }}
-            </p>
-          </div>
-        </div>
-      </template>
-    </v-calendar>
-  </div>
-</template>
+<script setup>
+import {ref, onMounted} from "vue";
+import RoosterService from "@/services/RoosterService.js";
+import AuthService from "@/services/AuthService.js";
 
-<script>
-export default {
-  data() {
-    const month = new Date().getMonth();
-    const year = new Date().getFullYear();
-    return {
-      masks: {
-        weekdays: 'WWW',
-      },
-      attributes: [
-        {
-          key: 1,
-          customData: {
-            title: 'Lunch with mom.',
-            class: 'bg-red-600 text-white',
-          },
-          dates: new Date(year, month, 1),
-        },
-        {
-          key: 2,
-          customData: {
-            title: 'Take Noah to basketball practice',
-            class: 'bg-blue-500 text-white',
-          },
-          dates: new Date(year, month, 2),
-        },
-        {
-          key: 3,
-          customData: {
-            title: "Noah's basketball game.",
-            class: 'bg-blue-500 text-white',
-          },
-          dates: new Date(year, month, 5),
-        },
-        {
-          key: 4,
-          customData: {
-            title: 'Take car to the shop',
-            class: 'bg-indigo-500 text-white',
-          },
-          dates: new Date(year, month, 5),
-        },
-        {
-          key: 4,
-          customData: {
-            title: 'Meeting with new client.',
-            class: 'bg-teal-500 text-white',
-          },
-          dates: new Date(year, month, 7),
-        },
-        {
-          key: 5,
-          customData: {
-            title: "Mia's gymnastics practice.",
-            class: 'bg-pink-500 text-white',
-          },
-          dates: new Date(year, month, 11),
-        },
-        {
-          key: 6,
-          customData: {
-            title: 'Cookout with friends.',
-            class: 'bg-orange-500 text-white',
-          },
-          dates: { months: 5, ordinalWeekdays: { 2: 1 } },
-        },
-        {
-          key: 7,
-          customData: {
-            title: "Mia's gymnastics recital.",
-            class: 'bg-pink-500 text-white',
-          },
-          dates: new Date(year, month, 22),
-        },
-        {
-          key: 8,
-          customData: {
-            title: 'Visit great grandma.',
-            class: 'bg-red-600 text-white',
-          },
-          dates: new Date(year, month, 25),
-        },
-      ],
-    };
-  },
-};
+const totalEmployees = ref(0)
+const employeesAtOffice = ref(0)
+const employeesOnLeave = ref(0)
+const attendancePercentage = ref(0)
+const currentWeek = ref(1)
+
+const daySlots = [
+  {id: 1, name: "Ochtend (09:00 - 12:30)", key: "ochtend"},
+  {id: 2, name: "Middag (12:30 - 17:00)", key: "middag"},
+]
+
+const weekDays = ref([]);
+
+const loadWeekData = async (weekNumber) => {
+  const user = await AuthService.getCurrentUser();
+  const data = await RoosterService.getRoosterByWeek(user.id, weekNumber);
+  weekDays.value = data.dagen;
+}
+
+const nextWeek = async () => {
+  currentWeek.value++;
+  await loadWeekData(currentWeek.value);
+}
+
+const previousWeek = async () => {
+  if (currentWeek.value > 1) {
+    currentWeek.value--;
+    await loadWeekData(currentWeek.value);
+  }
+}
+
+onMounted(async () => {
+  await loadWeekData(currentWeek.value);
+
+  const aanwezigen = await RoosterService.getAanwezigen();
+  const afwezigen = await RoosterService.getAfwezigen();
+
+  totalEmployees.value = aanwezigen;
+  employeesAtOffice.value = aanwezigen;
+  employeesOnLeave.value = afwezigen;
+
+  attendancePercentage.value = Math.round(
+    (employeesAtOffice.value / totalEmployees.value) * 100
+  );
+})
 </script>
 
-<style lang="postcss" scoped>
-::-webkit-scrollbar {
-  width: 0px;
-}
+<template>
+  <div class="p-6 space-y-4 bg-[#F3F4F6] font-[Inter]">
+    <!-- Week Navigation -->
+    <div class="flex items-center justify-between bg-white shadow-md rounded-xl p-4">
+      <button
+        data-testid="prev-week"
+        @click="previousWeek"
+        :disabled="currentWeek <= 1"
+        class="flex items-center justify-center w-10 h-10 rounded-lg transition-colors"
+        :class="currentWeek <= 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#0E3A5B] text-white hover:bg-[#0A2A43]'">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
 
-::-webkit-scrollbar-track {
-  display: none;
-}
+      <div class="text-center">
+        <h2 class="text-xl font-bold text-[#0E3A5B]">Week {{ currentWeek }}</h2>
+      </div>
 
-/deep/ .custom-calendar.vc-container {
-  --day-border: 1px solid #b8c2cc;
-  --day-border-highlight: 1px solid #b8c2cc;
-  --day-width: 90px;
-  --day-height: 90px;
-  --weekday-bg: #f8fafc;
-  --weekday-border: 1px solid #eaeaea;
+      <button
+        data-testid="next-week"
+        @click="nextWeek"
+        class="flex items-center justify-center w-10 h-10 rounded-lg bg-[#0E3A5B] text-white hover:bg-[#0A2A43] transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
 
-  border-radius: 0;
-  width: 100%;
+    <!-- Stats Header -->
+    <div class="grid grid-cols-4 gap-4">
+      <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h3 class="font-semibold text-[#0E3A5B] text-sm mb-1">Totaal werknemers</h3>
+        <p class="text-2xl font-bold text-[#0E3A5B]">{{ totalEmployees }}</p>
+      </div>
+      <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h3 class="font-semibold text-[#0E3A5B] text-sm mb-1">Aanwezig op kantoor</h3>
+        <p class="text-2xl font-bold text-[#3FB950]">{{ employeesAtOffice }}</p>
+      </div>
+      <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h3 class="font-semibold text-[#0E3A5B] text-sm mb-1">Verlof</h3>
+        <p class="text-2xl font-bold text-[#0E3A5B]">{{ employeesOnLeave }}</p>
+      </div>
+      <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h3 class="font-semibold text-[#0E3A5B] text-sm mb-1">Aanwezigheid (%)</h3>
+        <p class="text-2xl font-bold text-[#3FB950]">{{ attendancePercentage }}%</p>
+      </div>
+    </div>
 
-  & .vc-header {
-    background-color: #f1f5f8;
-    padding: 10px 0;
-  }
-  & .vc-weeks {
-    padding: 0;
-  }
-  & .vc-weekday {
-    background-color: var(--weekday-bg);
-    border-bottom: var(--weekday-border);
-    border-top: var(--weekday-border);
-    padding: 5px 0;
-  }
-  & .vc-day {
-    padding: 0 5px 3px 5px;
-    text-align: left;
-    height: var(--day-height);
-    min-width: var(--day-width);
-    background-color: white;
-    &.weekday-1,
-    &.weekday-7 {
-      background-color: #eff8ff;
-    }
-    &:not(.on-bottom) {
-      border-bottom: var(--day-border);
-      &.weekday-1 {
-        border-bottom: var(--day-border-highlight);
-      }
-    }
-    &:not(.on-right) {
-      border-right: var(--day-border);
-    }
-  }
-  & .vc-day-dots {
-    margin-bottom: 5px;
-  }
-}
-</style>
+    <!-- Calendar Grid -->
+    <div class="bg-white shadow-md rounded-xl overflow-hidden">
+      <!-- Day Headers -->
+      <div class="grid border-b border-gray-200"
+           :style="{ gridTemplateColumns: `200px repeat(${weekDays.length}, 1fr)` }">
+        <div class="bg-[#0E3A5B] border-r border-gray-200"></div>
+        <div v-for="day in weekDays" :key="day.id"
+             class="bg-[#0E3A5B] p-3 text-center border-r border-gray-200 last:border-r-0">
+          <div class="font-semibold text-white">{{ day.name }}</div>
+          <div class="text-sm text-[#F3F4F6]">{{ day.date }}</div>
+        </div>
+      </div>
+
+      <!-- Time Slots and Schedule -->
+      <div class="grid" :style="{ gridTemplateColumns: `200px repeat(${weekDays.length}, 1fr)` }">
+        <!-- Time Labels Column -->
+        <div class="flex flex-col border-r border-gray-200 bg-[#F3F4F6]">
+          <div v-for="slot in daySlots" :key="slot.id"
+               class="h-[5.4rem] flex items-center justify-end pr-4 text-sm text-[#0E3A5B] font-medium border-b border-gray-200 last:border-b-0">
+            {{ slot.name }}
+          </div>
+        </div>
+
+        <!-- Days Columns -->
+        <div v-for="day in weekDays" :key="day.id"
+             class="flex flex-col border-r border-gray-200 last:border-r-0">
+          <div v-for="slot in daySlots" :key="slot.id"
+               class="h-[5.4rem] flex items-center justify-center border-b border-gray-200 last:border-b-0 transition-all"
+               :class="((slot.id === 1 && day.ochtend) || (slot.id === 2 && day.middag))
+                 ? 'bg-[#3FB950] text-white'
+                 : 'bg-gray-300'">
+            <span class="text-sm font-medium">
+              {{
+                (slot.id === 1 && day.ochtend) || (slot.id === 2 && day.middag) ? 'Aanwezig' : 'Vrij'
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

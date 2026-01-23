@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://laravel.test/api",
+            "url": "http://127.0.0.1:8000/api",
             "description": "Local api server"
         }
     ],
@@ -85,6 +85,94 @@
                     },
                     "401": {
                         "description": "Not authenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/geoprofs/aanwezigen": {
+            "get": {
+                "tags": [
+                    "Geoprofs"
+                ],
+                "summary": "Alle aanwezige op kantoor van de huidige dag opvragen in getal",
+                "operationId": "75c968d1c05d3c70ccebc0e9807ed07e",
+                "responses": {
+                    "200": {
+                        "description": "Aanwezige leden opgehaald "
+                    },
+                    "404": {
+                        "description": "Geen aanwezige leden gevonden"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/geoprofs/afwezigen": {
+            "get": {
+                "tags": [
+                    "Geoprofs"
+                ],
+                "summary": "Alle afwezige op kantoor van de huidige dag opvragen in getal",
+                "operationId": "0b98d97590a491e4d9a41e26bed4ff15",
+                "responses": {
+                    "200": {
+                        "description": "Afwezige leden opgehaald "
+                    },
+                    "404": {
+                        "description": "Geen afwezige leden gevonden"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/{user}/rooster_week/{rooster_week}": {
+            "get": {
+                "tags": [
+                    "Rooster"
+                ],
+                "summary": "Verkrijgen rooster van een specifieke week van een gebruiker",
+                "operationId": "694e083e396570ef7b89c7f01057f846",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "rooster_week",
+                        "in": "path",
+                        "description": "ID of the rooster_week",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Weekrooster retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Weekrooster not found"
                     }
                 },
                 "security": [
@@ -370,23 +458,14 @@
                 ]
             }
         },
-        "/user/{user}/verlofaanvraag/{verlofaanvraag}/approve": {
+        "/verlofaanvraag/{verlofaanvraag}/approve": {
             "put": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Approve a verlofaanvraag (admin only)",
-                "operationId": "3fcf8a1ab67e6daff412de65d65932fa",
+                "operationId": "5bc09dcef761d5f790c900c91dba6fd9",
                 "parameters": [
-                    {
-                        "name": "user",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        }
-                    },
                     {
                         "name": "verlofaanvraag",
                         "in": "path",
@@ -409,7 +488,7 @@
                                 "properties": {
                                     "status": {
                                         "type": "string",
-                                        "example": "Goedgekeurd"
+                                        "example": "goedgekeurd"
                                     }
                                 },
                                 "type": "object"
@@ -513,6 +592,14 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Geoprofs",
+            "description": "Geoprofs"
+        },
+        {
+            "name": "Rooster",
+            "description": "Rooster"
         },
         {
             "name": "User",

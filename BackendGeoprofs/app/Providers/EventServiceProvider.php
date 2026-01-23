@@ -6,24 +6,16 @@ use App\Models\User;
 use App\Models\VerlofAanvraag;
 use App\Observers\UserObserver;
 use App\Observers\VerlofAanvraagObserver;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class EventServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
+    protected $listen = [
         //
-    }
+    ];
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         User::observe(UserObserver::class);
-
     }
 }
