@@ -7,21 +7,21 @@ use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
 it('verlofaanvraag wordt goedgekeurd en opgeslagen', function () {
-    $admin = User::create([
+    $admin = User::factory()->create([
         'name' => 'Admin',
         'surname' => 'User',
         'verlofsaldo' => 20,
-        'role' => 'admin',
-        'password' => Hash::make('password'),
+        'role' => 'manager',
+        'password' => bcrypt('secret'),
     ]);
 
     // Maak gewone gebruiker
-    $user = User::create([
+    $user = User::factory()->create([
         'name' => 'Test',
         'surname' => 'User',
         'verlofsaldo' => 5,
-        'role' => 'gebruiker',
-        'password' => bcrypt('password'),
+        'role' => 'worker',
+        'password' => bcrypt('secret'),
     ]);
 
     // Maak verlofaanvraag
@@ -37,8 +37,8 @@ it('verlofaanvraag wordt goedgekeurd en opgeslagen', function () {
     $this->actingAs($admin, 'sanctum');
 
     // API call
-    $response = $this->putJson("/api/verlofaanvraag/{$aanvraag->id}/approve", [
-        'status' => 'goedgekeurd',
+    $response = $this->putJson("/api/user/{$user->id}/verlofaanvraag/{$aanvraag->id}/approve", [
+        'status' => 'Goedgekeurd',
     ]);
 
     // Check status
@@ -47,7 +47,7 @@ it('verlofaanvraag wordt goedgekeurd en opgeslagen', function () {
     // Check database
     $this->assertDatabaseHas('verlof_aanvraags', [
         'id' => $aanvraag->id,
-        'status' => 'goedgekeurd',
+        'status' => 'Goedgekeurd',
     ]);
 
     // Check dat saldo van gebruiker is verlaagd

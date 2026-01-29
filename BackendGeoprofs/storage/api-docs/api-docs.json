@@ -492,14 +492,23 @@
                 ]
             }
         },
-        "/verlofaanvraag/{verlofaanvraag}/approve": {
+        "/user/{user}/verlofaanvraag/{verlofaanvraag}/approve": {
             "put": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Approve a verlofaanvraag (admin only)",
-                "operationId": "5bc09dcef761d5f790c900c91dba6fd9",
+                "operationId": "3fcf8a1ab67e6daff412de65d65932fa",
                 "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
                     {
                         "name": "verlofaanvraag",
                         "in": "path",
@@ -522,7 +531,7 @@
                                 "properties": {
                                     "status": {
                                         "type": "string",
-                                        "example": "goedgekeurd"
+                                        "example": "Goedgekeurd"
                                     }
                                 },
                                 "type": "object"

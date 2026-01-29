@@ -14,21 +14,19 @@ it('stuurt een notificatie naar een manager/admin wanneer verlof wordt aangevraa
     Notification::fake();
 
     // Admin (ontvanger)
-    $admin = User::create([
+    $admin = User::factory()->create([
         'name' => 'Admin',
         'surname' => 'User',
         'verlofsaldo' => 20,
-        'role' => 'admin',
-        'password' => bcrypt('password'),
+        'role' => 'manager',
     ]);
 
     // Gewone gebruiker
-    $user = User::create([
+    $user = User::factory()->create([
         'name' => 'Test',
         'surname' => 'User',
         'verlofsaldo' => 5,
-        'role' => 'gebruiker',
-        'password' => bcrypt('password'),
+        'role' => 'worker',
     ]);
 
     // Verlofaanvraag
