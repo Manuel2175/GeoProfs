@@ -75,7 +75,6 @@ class VerlofAanvraagController extends Controller
     // opslaan nieuwe verlofaanvraag die meegestuurd wordt vanuit request resource
     public function store(Request $request, User $user)
     {
-
         //validation
         $request->validate([
             'reden' => 'required',

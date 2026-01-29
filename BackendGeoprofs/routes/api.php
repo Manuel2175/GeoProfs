@@ -20,11 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/user/{user}', [UserController::class, 'show']);
     Route::put('/user/{user}', [UserController::class, 'update'])->middleware(\App\Http\Middleware\checkRole::class);
-    // Verlofaanvraag routes
-    Route::put('/verlofaanvraag/{verlofAanvraag}/approve', [VerlofAanvraagController::class, 'approve']);
     Route::prefix('user/{user}')->group(function () {
-        Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);
-        Route::put('/verlofaanvraag/{verlofAanvraag}/reject', [VerlofAanvraagController::class, 'reject']);
         Route::apiResource('rooster_week', RoosterWeekController::class);
         Route::get('/notifications', [UserController::class, 'notifications']);
     });
