@@ -2,13 +2,13 @@
 // Controller voor verlofaanvraag model met aanvullend functies om een verlofaanvraag goed te keuren en af te keuren
 namespace App\Http\Controllers;
 
+use App\Events\VerlofAangevraagd;
 use App\Models\Rooster_week;
 use App\Models\User;
 use App\Models\VerlofAanvraag;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 
 class VerlofAanvraagController extends Controller
 {
@@ -57,8 +57,8 @@ class VerlofAanvraagController extends Controller
      *         @OA\JsonContent(
      *             required={"reden", "startdatum", "einddatum", "status"},
      *             @OA\Property(property="reden", type="string", example="Vakantie"),
-     *             @OA\Property(property="startdatum", type="string", format="date", example="2025-07-01"),
-     *             @OA\Property(property="einddatum", type="string", format="date", example="2025-07-10"),
+     *             @OA\Property(property="startdatum", type="string", format="date", example="2026-07-01"),
+     *             @OA\Property(property="einddatum", type="string", format="date", example="2026-07-10"),
      *             @OA\Property(property="status", type="string", example="aangevraagd")
      *         )
      *     ),
@@ -75,6 +75,7 @@ class VerlofAanvraagController extends Controller
     // opslaan nieuwe verlofaanvraag die meegestuurd wordt vanuit request resource
     public function store(Request $request, User $user)
     {
+
         //validation
         $request->validate([
             'reden' => 'required',
@@ -82,6 +83,7 @@ class VerlofAanvraagController extends Controller
             'einddatum' => 'required|date',
             'status' => 'required',
         ]);
+
         if ($request->get('startdatum') <= Date::today() || $request->get('einddatum') <= Date::today()) {
             return response()->json([
                 'message' => 'Startdatum en/of einddatum moet in de toekomst zijn!'
@@ -100,6 +102,16 @@ class VerlofAanvraagController extends Controller
             'einddatum' => $request->get('einddatum'),
             'status' => $request->get('status'),
             'user_id' => $user->id,
+        ]);
+        VerlofAangevraagd::dispatch($aanvraag);
+        Log::channel('daily')->info('User created a verlofaanvraag', [
+            'user_id' => $request->user()->id,
+            'username' => $request->user()->name,
+            'reden' => $aanvraag->reden,
+            'startDatum' => $aanvraag->startdatum,
+            'einddatum' => $aanvraag->einddatum,
+            'ip' => $request->ip(),
+            'time' => now()->toDateTimeString(),
         ]);
         //return with succes
         return response()->json([
@@ -146,10 +158,16 @@ class VerlofAanvraagController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/verlofaanvraag/{verlofaanvraag}/approve",
+     *     path="/user/{user}/verlofaanvraag/{verlofaanvraag}/approve",
      *     summary="Approve a verlofaanvraag (admin only)",
      *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
+     *     @OA\Parameter(
+     *         name="user",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
      *     @OA\Parameter(
      *         name="verlofaanvraag",
      *         in="path",
@@ -161,7 +179,7 @@ class VerlofAanvraagController extends Controller
      *         description="Approval status update",
      *         @OA\JsonContent(
      *             required={"status"},
-     *             @OA\Property(property="status", type="string", example="goedgekeurd")
+     *             @OA\Property(property="status", type="string", example="Goedgekeurd")
      *         )
      *     ),
      *     @OA\Response(
@@ -175,49 +193,27 @@ class VerlofAanvraagController extends Controller
      * )
      */
     // goedkeuren verlofaanvraag door status aan te passen naar goedgekeurd
-    public function approve(Request $request, VerlofAanvraag $verlofAanvraag)
+    public function approve(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {
-        if (auth()->user()->role !== 'admin') {
-            return response()->json([], 403);
-        }
 
-        $request->validate([
-            'status' => 'required',
-        ]);
-
-        $user = $verlofAanvraag->user;
-
-        $user->decrement('verlofsaldo', 1);
-
-        $verlofAanvraag->status = $request->status;
-        $verlofAanvraag->save();
-        $start = Carbon::parse($verlofAanvraag->startdatum);
-        $eind = Carbon::parse($verlofAanvraag->einddatum);
-        $periode = CarbonPeriod::create($start, $eind);
-        Carbon::setLocale('nl');
-        setlocale(LC_TIME, 'nl_NL.UTF-8');
-
-        foreach ($periode as $datum) {
-            $weeknummer = $datum->weekOfYear;
-            $dagNaam = $datum->translatedFormat('l');
-            $week = Rooster_week::where('weeknummer', $weeknummer)->first();
-            if (!$week) {
-                continue;
-            }
-            $dag = $week->dagen()
-                ->where('name', $dagNaam)
-                ->first();
-            if (!$dag) {
-                continue;
-            }
-            $dag->update([
-                'ochtend' => 0,
-                'middag'  => 0,
+            $request->validate([
+                'status' => 'required',
             ]);
-        }
-        return response()->json('Verlofaanvraag is goedgekeurd');
-    }
+            $user->update([
+                'verlofsaldo' =>  $user->verlofsaldo - 1
+            ]);
+            $verlofAanvraag->update([
+                'status' => $request->get('status'),
+            ]);
+            Log::channel('daily')->info('User heeft verlofaanvraag goedgekeurd', [
+                'user_id' => $request->user()->id,
+                'username' => $request->user()->name,
+                'ip' => $request->ip(),
+                'time' => now()->toDateTimeString(),
+            ]);
+            return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is approved!');
 
+    }
 
     /**
      * @OA\Put(
@@ -259,7 +255,6 @@ class VerlofAanvraagController extends Controller
     // verlofaanvraag afwijzen met het toevoegen van afkeuringsreden
     public function reject(Request $request, User $user, VerlofAanvraag $verlofAanvraag)
     {
-        if ($user->role == 'admin') {
             $request->validate([
                 'status' => 'required',
                 'afkeuringsreden' => 'required',
@@ -268,8 +263,13 @@ class VerlofAanvraagController extends Controller
                 'status' => $request->get('status'),
                 'afkeuringsreden' => $request->get('afkeuringsreden'),
             ]);
+            Log::channel('daily')->info('User heeft verlofaanvraag afgekeurd', [
+                'user_id' => $request->user()->id,
+                'username' => $request->user()->name,
+                'ip' => $request->ip(),
+                'time' => now()->toDateTimeString(),
+            ]);
             return response()->json($verlofAanvraag->reden . 'from:' . $user->name . ' is rejected!');
-        }
-        return response()->json()->setStatusCode(403);
+
     }
 }

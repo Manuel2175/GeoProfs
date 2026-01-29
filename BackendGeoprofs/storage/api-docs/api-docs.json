@@ -51,7 +51,7 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Dr. Emmett Flatley"
+                                        "example": "Brycen Veum"
                                     },
                                     "password": {
                                         "type": "string",
@@ -239,6 +239,113 @@
                         "BearerAuth": []
                     }
                 ]
+            },
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update User",
+                "operationId": "6bad92b32b8ea09447c40062e7bffd7a",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "verlofsaldo": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 44
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "worker",
+                                            "HR",
+                                            "Manager"
+                                        ],
+                                        "example": "HR"
+                                    },
+                                    "afdeling": {
+                                        "type": "string",
+                                        "example": "Drone & Imaging"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succesvol geüpdatet"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/{user}/notifications": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get notifications of the user",
+                "operationId": "99148c34f6aacb5376d5b87c23b965c2",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "uniquee indentificeerder van gebruiker",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "geen gebruikers"
+                    },
+                    "403": {
+                        "description": "niet geauthorizeerd"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
         "/user/{user}/verlofaanvraag": {
@@ -309,12 +416,12 @@
                                     "startdatum": {
                                         "type": "string",
                                         "format": "date",
-                                        "example": "2025-07-01"
+                                        "example": "2026-07-01"
                                     },
                                     "einddatum": {
                                         "type": "string",
                                         "format": "date",
-                                        "example": "2025-07-10"
+                                        "example": "2026-07-10"
                                     },
                                     "status": {
                                         "type": "string",

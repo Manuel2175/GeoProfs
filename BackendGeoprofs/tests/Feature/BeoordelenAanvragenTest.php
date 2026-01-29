@@ -27,8 +27,8 @@ it('verlofaanvraag wordt goedgekeurd en opgeslagen', function () {
     // Maak verlofaanvraag
     $aanvraag = VerlofAanvraag::create([
         'user_id' => $user->id,
-        'startdatum' => '2025-12-04',
-        'einddatum' => '2025-12-24',
+        'startdatum' => '2026-12-04',
+        'einddatum' => '2026-12-24',
         'reden' => 'ziekte',
         'status' => 'aangevraagd',
     ]);
@@ -37,7 +37,7 @@ it('verlofaanvraag wordt goedgekeurd en opgeslagen', function () {
     $this->actingAs($admin, 'sanctum');
 
     // API call
-    $response = $this->putJson("/verlofaanvraag/{$aanvraag->id}/approve", [
+    $response = $this->putJson("/api/verlofaanvraag/{$aanvraag->id}/approve", [
         'status' => 'goedgekeurd',
     ]);
 
@@ -56,5 +56,3 @@ it('verlofaanvraag wordt goedgekeurd en opgeslagen', function () {
         'verlofsaldo' => 4,
     ]);
 });
-
-

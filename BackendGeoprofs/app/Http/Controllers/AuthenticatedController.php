@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthenticatedController extends Controller
 {
@@ -16,7 +17,7 @@ class AuthenticatedController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"name","password"},
-     *             @OA\Property(property="name", type="string", example="Dr. Emmett Flatley"),
+     *             @OA\Property(property="name", type="string", example="Brycen Veum"),
      *             @OA\Property(property="password", type="string", format="password", example="Password123")
      *         )
      *     ),
@@ -41,7 +42,12 @@ class AuthenticatedController extends Controller
 
         // Create Sanctum token
         $token = $user->createToken('auth-token')->plainTextToken;
-
+        Log::channel('daily')->info('User logged in', [
+            'user_id' => $request->user()->id,
+            'username' => $request->user()->name,
+            'ip' => $request->ip(),
+            'time' => now()->toDateTimeString(),
+        ]);
         return response()->json([
             'user' => $user,
             'token' => $token,
@@ -75,6 +81,13 @@ class AuthenticatedController extends Controller
      */
     public function logout(Request $request)
     {
+        Log::channel('daily')->info('User logged out', [
+            'user_id' => $request->user()->id,
+            'username' => $request->user()->name,
+            'ip' => $request->ip(),
+            'time' => now()->toDateTimeString(),
+        ]);
+
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully']);
     }

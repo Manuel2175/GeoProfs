@@ -11,9 +11,9 @@ class VerlofService {
     return response.data;
   }
 
-  async approve(verlofaanvraag) {
+  async approve(user, verlofaanvraag) {
     const response = await axios.put(
-      `/verlofaanvraag/${verlofaanvraag}/approve`,
+      `/user/${user}/verlofaanvraag/${verlofaanvraag}/approve`,
       { status: 'goedgekeurd' }
     );
     return response.data;
