@@ -62,11 +62,7 @@ const haalVerlovenOp = async () => {
     loading.value = true;
     await ensureCsrfToken();
 
-    const currentUser = AuthService.getCurrentUser();
-    const userId = currentUser.id;
-
-    const res = await VerlofService.getVerloven(userId);
-    const alleVerloven = Array.isArray(res) ? res : res.aanvragen || [];
+    const alleVerloven = await VerlofService.getVerloven();
 
     // Filter alleen de aanvragen met status 'aangevraagd'
     verloven.value = alleVerloven.filter(verlof => verlof.status === 'aangevraagd');

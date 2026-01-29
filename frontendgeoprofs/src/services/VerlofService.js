@@ -6,8 +6,8 @@ class VerlofService {
     return response.data;
   }
 
-  async getVerloven(user) {
-    const response = await axios.get(`/user/${user}/verlofaanvraag`);
+  async getVerloven() {
+    const response = await axios.get(`/verlofaanvraag`);
     return response.data;
   }
 

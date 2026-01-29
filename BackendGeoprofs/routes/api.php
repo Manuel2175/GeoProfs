@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('/geoprofs/aanwezigen', [GeoprofsController::class, 'aanwezigen']);
     Route::get('/geoprofs/afwezigen', [GeoprofsController::class, 'afwezigen']);
-
+    Route::get('verlofaanvraag', [VerlofAanvraagController::class, 'indexverlofaanvraag'])->middleware(\App\Http\Middleware\checkManager::class);
         Route::prefix('user/{user}')->group(function () {
             Route::apiResource('verlofaanvraag', VerlofAanvraagController::class);
             Route::put('/verlofaanvraag/{verlofAanvraag}/reject', [VerlofAanvraagController::class, 'reject'])->middleware(checkManager::class);

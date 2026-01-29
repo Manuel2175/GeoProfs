@@ -26,8 +26,7 @@ export default {
       error.value = '';
 
       try {
-        const currentUser = AuthService.getCurrentUser();
-
+        const currentUser = AuthService.getCurrentUser()
         const user = currentUser.id;
         await VerlofService.aanvragen(user, {
           reden: reden.value,

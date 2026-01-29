@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/api",
+            "url": "http://laravel.test/api",
             "description": "Local api server"
         }
     ],
@@ -348,25 +348,13 @@
                 ]
             }
         },
-        "/user/{user}/verlofaanvraag": {
+        "/verlofaanvraag": {
             "get": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
-                "summary": "Get all verlofaanvragen of a specific user",
-                "operationId": "a0f7a9db451e2b85de597fe02faf6491",
-                "parameters": [
-                    {
-                        "name": "user",
-                        "in": "path",
-                        "description": "ID of the user",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        }
-                    }
-                ],
+                "summary": "Get all verlofaanvragen",
+                "operationId": "7c6f4433c98a03f131db3ca6b045305e",
                 "responses": {
                     "200": {
                         "description": "List of verlofaanvragen retrieved successfully"
@@ -377,7 +365,9 @@
                         "BearerAuth": []
                     }
                 ]
-            },
+            }
+        },
+        "/user/{user}/verlofaanvraag": {
             "post": {
                 "tags": [
                     "Verlofaanvraag"
@@ -492,14 +482,23 @@
                 ]
             }
         },
-        "/verlofaanvraag/{verlofaanvraag}/approve": {
+        "/user/{user}/verlofaanvraag/{verlofaanvraag}/approve": {
             "put": {
                 "tags": [
                     "Verlofaanvraag"
                 ],
                 "summary": "Approve a verlofaanvraag (admin only)",
-                "operationId": "5bc09dcef761d5f790c900c91dba6fd9",
+                "operationId": "3fcf8a1ab67e6daff412de65d65932fa",
                 "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
                     {
                         "name": "verlofaanvraag",
                         "in": "path",
@@ -522,7 +521,7 @@
                                 "properties": {
                                     "status": {
                                         "type": "string",
-                                        "example": "goedgekeurd"
+                                        "example": "Goedgekeurd"
                                     }
                                 },
                                 "type": "object"

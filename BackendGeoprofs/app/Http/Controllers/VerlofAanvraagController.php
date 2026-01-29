@@ -14,17 +14,10 @@ class VerlofAanvraagController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/user/{user}/verlofaanvraag",
-     *     summary="Get all verlofaanvragen of a specific user",
+     *     path="/verlofaanvraag",
+     *     summary="Get all verlofaanvragen",
      *     security={{"BearerAuth": {}}},
      *     tags={"Verlofaanvraag"},
-     *     @OA\Parameter(
-     *         name="user",
-     *         in="path",
-     *         required=true,
-     *         description="ID of the user",
-     *         @OA\Schema(type="integer", example=1)
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="List of verlofaanvragen retrieved successfully"
@@ -32,9 +25,16 @@ class VerlofAanvraagController extends Controller
      * )
      */
     //ophalen alle verlofaanvragen van user
-    public function index(User $user)
+    public function indexverlofaanvraag()
     {
-        $aanvragen = $user->verlofaanvraags()->with('user')->get();
+        $user = auth()->user();
+
+        $aanvragen = VerlofAanvraag::with('user')
+            ->whereHas('user', function ($query) use ($user) {
+                $query->where('afdeling', $user->afdeling);
+            })
+            ->get();
+
         return response()->json($aanvragen);
     }
 
