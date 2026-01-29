@@ -354,7 +354,7 @@
                     "Verlofaanvraag"
                 ],
                 "summary": "Get all verlofaanvragen",
-                "operationId": "7c6f4433c98a03f131db3ca6b045305e",
+                "operationId": "72f66d644d31ccf44f73ea00f4a831c1",
                 "responses": {
                     "200": {
                         "description": "List of verlofaanvragen retrieved successfully"

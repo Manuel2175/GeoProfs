@@ -6,6 +6,8 @@ use App\Events\VerlofAangevraagd;
 use App\Models\Rooster_week;
 use App\Models\User;
 use App\Models\VerlofAanvraag;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
@@ -31,12 +33,13 @@ class VerlofAanvraagController extends Controller
 
         $aanvragen = VerlofAanvraag::with('user')
             ->whereHas('user', function ($query) use ($user) {
-                $query->where('afdeling', $user->afdeling);
+                $query->where('afdeling', $user->afdeling)
+                    ->where('id', '!=', $user->id);
             })
             ->get();
-
         return response()->json($aanvragen);
     }
+
 
     /**
      * @OA\Post(
@@ -198,12 +201,36 @@ class VerlofAanvraagController extends Controller
             $request->validate([
                 'status' => 'required',
             ]);
-            $user->update([
-                'verlofsaldo' =>  $user->verlofsaldo - 1
+        $user = $verlofAanvraag->user;
+
+        $user->decrement('verlofsaldo', 1);
+
+        $verlofAanvraag->status = $request->status;
+        $verlofAanvraag->save();
+        $start = Carbon::parse($verlofAanvraag->startdatum);
+        $eind = Carbon::parse($verlofAanvraag->einddatum);
+        $periode = CarbonPeriod::create($start, $eind);
+        Carbon::setLocale('nl');
+        setlocale(LC_TIME, 'nl_NL.UTF-8');
+
+        foreach ($periode as $datum) {
+            $weeknummer = $datum->weekOfYear;
+            $dagNaam = $datum->translatedFormat('l');
+            $week = Rooster_week::where('weeknummer', $weeknummer)->first();
+            if (!$week) {
+                continue;
+            }
+            $dag = $week->dagen()
+                ->where('name', $dagNaam)
+                ->first();
+            if (!$dag) {
+                continue;
+            }
+            $dag->update([
+                'ochtend' => 0,
+                'middag'  => 0,
             ]);
-            $verlofAanvraag->update([
-                'status' => $request->get('status'),
-            ]);
+        }
             Log::channel('daily')->info('User heeft verlofaanvraag goedgekeurd', [
                 'user_id' => $request->user()->id,
                 'username' => $request->user()->name,
